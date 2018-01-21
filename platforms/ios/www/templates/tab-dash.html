@@ -1,0 +1,66 @@
+<ion-view view-title="Dashboard">
+  <ion-content class="padding">
+      <div class="row">
+          <div class="col">
+              <button class="button button-small button-stable" style="width:100px;" ng-click="loadByStatus()">Por Estatus</button>
+          </div>
+          <div class="col">
+              <a class="button button-small button-stable" style="width:100px;" ng-click="loadByPeriod()">   Por Periodo   </a>
+          </div>
+          <div class="col">
+          <a class="button button-small button-stable" style="width:100px;" ng-click="loadByNum()">   Por Número   </a>
+      </div>
+    </div>
+
+    <div>
+        <ion-toggle ng-hide="dashSetting" class="dashSetting" ng-model="settings.viewAllCompany">
+            Ver todos los tickets de la empresa
+        </ion-toggle>
+    </div>
+    <div ng-hide="dashSelectStatus" class="list">
+        <label class="item item-input item-select dashSetting">
+            <div class="input-label dashSetting">
+                Seleccione el estatus
+            </div>
+            <select>
+                <option selected>Abiertos</option>
+                <option>En Proceso</option>
+                <option>Cerrados</option>
+            </select>
+        </label>
+    </div>
+    <div ng-hide="dashSelectPeriod" class="list">
+        <label class="item item-input item-select dashSetting">
+            <div class="input-label dashSetting">
+                Seleccione el periodo
+            </div>
+            <select>
+                <option selected>&Uacute;ltimo mes</option>
+                <option>&Uacute;ltimos dos meses</option>
+                <option>&Uacute;ltimos tres meses</option>
+            </select>
+        </label>
+    </div>
+    <div ng-hide="dashSelectNum" class="list">
+        <div class="row">
+            <div class="item-input-inset col col-90">
+                <label class="item-input-wrapper">
+                    <input type="text" placeholder="Número de Ticket">
+                </label>
+            </div>
+            <div class="col" style="margin-top:-10px;">
+                <a class="button button-icon icon ion-ios-search" ng-click="loadNum()"></a>
+            </div>
+        </div>      
+    </div>
+    <ion-list>
+        <ion-item class="item-ticket item-icon-right" ng-repeat="ticket in tickets" type="item-text-wrap" href="#/tab/dash/{{ticket.id}}">
+                  <h2>{{ticket.id}} - {{ticket.titulo}}</h2>
+          <p>Fecha: <i>{{ticket.fecha}}</i> Report&oacute;: <i>{{ticket.reporto}}</i></p>
+          <p>Estatus: <i>{{ticket.estatus}}</i> &Uacute;timo cambio: <i>{{ticket.update}}</i></p>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+    
+  </ion-content>
+</ion-view>

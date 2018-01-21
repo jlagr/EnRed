@@ -1,0 +1,20 @@
+﻿<ion-view view-title="EnRed Durango" name="login-view" class="background">
+    <ion-content class="padding">
+        <div id="logo"><img src="img/logoApp.png" alt="EnRed" /></div>
+        <div class="list list-inset">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Email</span>
+                <input type="text" placeholder="Email" ng-model="data.email">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Password</span>
+                <input type="password" placeholder="Password" ng-model="data.password">
+            </label>
+        </div>
+        
+        <button class="button button-block button-calm" ng-click="login()">Login</button>
+        <div id="index_version">
+            Version: 1.0.0
+        </div>
+    </ion-content>
+</ion-view>

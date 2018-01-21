@@ -1,0 +1,43 @@
+﻿<ion-view view-title="Enlaces y Redes de Durango" name="login-view" class="app_title">
+    <ion-content class="padding">
+        <div id="new_user_title">Solicitud de Nuevo Usuario</div>
+        <div id="new_user_disclamer">Llene los siguietes datos para solicitar un nuevo usuario.<br />
+        Cuando sea autorizado por el administrador recivir&aacute; un correo electr&oacute;nico de aviso y podr&aacute; hacer uso de
+        la aplicaci&oacute;n.
+        </div>
+        <div class="list list-inset">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Nombre Completo</span>
+                <input type="text" placeholder="Nombre Completo" ng-model="data.nombre">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Email</span>
+                <input type="text" placeholder="Email" ng-model="data.email">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Tel. Movil</span>
+                <input type="number" placeholder="Tel. Movil" ng-model="data.movil">
+            </label>
+            <label class="item item-input item-select selectMovilProvider">
+                <label for="proveedor">Proveedor:</label>
+                <select ng-init="data.proveedorMovil = 'Telcel'" id="proveedor" ng-model="data.proveedorMovil" >
+                    <option>Telcel</option>
+                    <option>AT&T</option>
+                    <option>Movistar</option>
+                    <option>Otro</option>
+                </select>
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Password</span>
+                
+                <input type="password" placeholder="Password" ng-model="data.password">
+            </label>
+        </div>
+        <div class="passwordRules">El password debe tener mínimo 8 caractéres, almenos una mayúscula y por lo menos un número.</div>
+        <div id="valBlock">
+            <il id="valMessage"></il>
+        </div>
+        <button class="button button-block button-calm" ng-click="newUser()">Enviar</button>
+        
+    </ion-content>
+</ion-view>

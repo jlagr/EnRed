@@ -1,0 +1,184 @@
+﻿.background, .background .pane, .background .item, .background .item-complex .item-content {
+    /*background-image: url(../../../img/bk-net08.jpg)*/
+    background-image: url(../img/fondoApp.png)
+}
+
+.app_title {
+    text-align:center !important;
+    align-content: center !important;
+}
+#logo {
+    font-size: 16px;
+    align-content:center;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+#logo img {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+#index_appname {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+#forgot_password_wrapper {
+    padding-top:20px;
+}
+#forgot_password_new {
+  float: left;
+  padding-left:40px;
+}
+#forgot_password_restore {
+  float: right;
+  padding-right:35px;
+}
+
+#index_version {
+    position: relative;
+    bottom: 0;
+    padding-top:50px;
+    width: 100%;
+    color: cornflowerblue;
+    text-align:center;
+    font-size: 10px;
+}
+
+#new_user_title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#new_user_disclamer {
+    font-size: 12px;
+    text-align: left;
+}
+
+.dashSetting {
+    font-size: 12px;
+    margin-top:1px;
+    margin-left:7px;
+    margin-right:7px;
+    border-color: transparent !important;
+}
+.dashSetting select {
+    font-size: 12px;
+}
+
+.item-ticket {
+    font-size: 12px;
+}
+.item-ticket h2 {
+    font-size: 12px;
+    font-weight: bold;
+}
+.item-ticket p {
+    font-size: 12px;
+    font-weight: normal;
+}
+.item-ticket i {
+    font-size: 12px;
+    font-weight: normal;
+    font-style:italic;
+}
+
+label textarea {
+    height: 300px;
+    font-size: 12px;
+}
+
+.card {
+    font-size:12px !important;
+}
+.card a {
+    font-size:12px !important;
+    color: blue;
+}
+.card-header {
+    font-size:12px;
+    font-weight: bold;
+}
+.item-text-wrap {
+    font-size:12px;
+}
+
+.item-notification {
+    font-size:12px;
+}
+.item-notification h2 {
+    font-size:12px;
+    font-weight: bold;
+}
+.item-notification p {
+    font-size:12px;
+    font-style: italic;
+}
+.passwordRules {
+    margin-top: -10px;
+    font-size:12px;
+    color: lightskyblue;
+    text-align:left;
+}
+#valBlock il {
+    margin-top: 10px;
+    font-size:12px;
+    color: red;
+    text-align:left;
+}
+.selectMovilProvider{
+    margin-top: 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size:12px;
+    text-align:left;
+    color: darkgray;
+    height: 20px;
+    width: 100%;
+}
+.appUserActivo_0{
+    background-color: red;
+    height: 3px;
+    width: 125%;
+    margin-top: -16px;
+    margin-left: -16px;
+}
+.appUserActivo_1{
+    background-color: green;
+    height: 3px;
+    width: 125%;
+    margin-top: -16px;
+    margin-left: -16px;
+}
+.selectUserEstatus {
+    margin-left:5px;
+}
+.selectUserEstatus label, select {
+    font-size: 14px;
+    border-width: 0px;
+}
+.item-user-card {
+    font-size: 12px;
+    height: 120px;
+}
+.item-user-card h1 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 3px
+}
+.item-user-card h2 {
+    font-size: 12px;
+    font-weight: bold;
+}
+.item-user-card row {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 0px !important;
+    margin-top: 0px;
+}
+.item-user-card i {
+    font-size: 12px;
+    font-weight: normal;
+    font-style:italic;
+}
