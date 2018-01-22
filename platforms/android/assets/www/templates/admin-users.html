@@ -10,7 +10,7 @@
                     </select>
             </label>
       </div>
-      <ion-refresher pulling-text="Refrescar..." on-refresh="test()"></ion-refresher>
+      <ion-refresher pulling-text="Refrescar..." on-refresh="doRefresh()"></ion-refresher>
         <ion-list>
             <ion-item class="item-user-card item-icon-right" style="margin-top:10px" ng-repeat="appUser in appUsers" type="item-text-wrap" href="#/admin/adminUsers/{{appUser.id}}">
                 <div class="appUserActivo_{{appUser.activo}}"></div>

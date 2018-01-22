@@ -1,147 +1,132 @@
 angular.module('starter.controllers', ['ngCordova'])
 
-    /*   -----------   Menú lateral  --------------- */
-    .controller('LoginCtrl', function ($scope, $ionicLoading, $cordovaSQLite, $timeout, $http, LoginService, $ionicPopup, $state, User) {
-        $scope.data = {};
-        //Si hay un mail guardado en la bd local lo usa como default
-        var storedMail = storedMail();
-        if (storedMail != "") {
-            $scope.data.email = storedMail;
-            if(testMode) {
-                $scope.data.password = "Ocampo1318";
-            }
+.controller('AppCtrl', function($scope, $state, $ionicPopup, $cordovaToast, AuthService, AUTH_EVENTS) {
+    $scope.username = AuthService.username();
+    isApp = !document.URL.startsWith('http');
+
+    console.log("isApp: ", isApp);
+
+    $scope.$on(AUTH_EVENTS.notAuthorized, function(event) {
+      /*var alertPopup = $ionicPopup.alert({
+        title: 'Unauthorized!',
+        template: 'You are not allowed to access this resource.'
+      });*/
+
+      $cordovaToast.showLongBottom('Su usuario no esta autorizado para esta función.').then(
+        function(success) {}, function (error) {
+            console.log("toast err: ", error)
+        });
+    });
+  
+    $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
+      AuthService.logout();
+      $state.go('login');
+      /*var alertPopup = $ionicPopup.alert({
+        title: 'Session Lost!',
+        template: 'Sorry, You have to login again.'
+      });*/
+      $cordovaToast.showLongBottom('Su sesión ha caducado.').then(
+        function(success) {}, function (error) {
+            console.log("toast err: ", error)
+        });
+    });
+  
+    $scope.setCurrentUsername = function(name) {
+      $scope.username = name;
+    };
+
+    $scope.displayMessage = function(title, message) {
+        if(testMode) {
+            var alertPopup = $ionicPopup.alert({
+            title: title,
+            template: message
+        });
         }
-
-        $scope.login = function () {
-            if (!isValid()) {
-                return false;
-            }
-            //Muestra el spinner
-            $ionicLoading.show({
-                template: '<ion-spinner icon="ripple" class="spinner-calm"></ion-spinner>'
+        else {
+            $cordovaToast.showLongBottom(message).then(
+            function(success) {}, function (error) {
+                console.log("toast err: ", error)
             });
+        }
+    }
 
-            //Llama al servicio de Login
-            LoginService.loginUser($scope.data, User, $http).success(function (data) {
-                //Oculta la opcion de login del menú y muestra la de logout
-                var menuLogin = document.getElementById('menuLogin');
-                var menuLogout = document.getElementById('menuLogout');
-                var menuNewUser = document.getElementById('menuNewUser');
-                var menuAdmin = document.getElementById('menuAdmin');
-                var menuAdmin = document.getElementById('menuAdmin');
-                var menuResetPassword = document.getElementById('menuResetPassword');
-                menuLogin.style.display = 'none';
-                menuLogout.style.display = 'block';
-                menuResetPassword.style.display = 'none';
-                if (User.data.rol == "admin") {
-                    menuAdmin.style.display = 'block';
-                }
-                if (User.data.rol == "worker") {
-                    menuAdmin.style.display = 'none';
-                }
-                if (User.data.rol == "user"){
-                    menuNewUser.style.display = 'none';
-                }
-                //Guarda el correo en la bd
-                storeMail(User.data.email);
-                //Inserta un retardo antes de cambiar de estado
-                $timeout(function () {
-                    $ionicLoading.hide();
-                    $scope.data.password = "";
-                    $state.go('tab.dash');
-                }, 1000);
+  })
 
-            }).error(function (data) {
-                $cordovaToast.showLongBottom('El servicio no responde.').then(
-                    function(success) {}, function (error) {
-                        console.log("toast err: ", error)
-                    });
+  .controller('LoginCtrl', function($scope, $state, $ionicLoading, AuthService, USER_ROLES, $timeout) {
+    $scope.data = {};
+    
+    //usa el correo de usuario previamente usado
+    var useremail = window.localStorage.getItem('EnRedUserEmail');
+    if(useremail != undefined || useremail != ''){
+        $scope.data.email = useremail;
+    }
+
+    $scope.login = function(data) {
+        if (!isValid()) {
+            return false;
+        }
+        //Muestra el spinner
+        $ionicLoading.show({
+            template: '<ion-spinner icon="ripple" class="spinner-calm"></ion-spinner>'
+        });
+
+      AuthService.login($scope.data.email, $scope.data.password).then(function(authenticated) {
+        $scope.setCurrentUsername(AuthService.username());
+        var menuLogin = document.getElementById('menuLogin');
+        var menuLogout = document.getElementById('menuLogout');
+        var menuNewUser = document.getElementById('menuNewUser');
+        var menuAdmin = document.getElementById('menuAdmin');
+        var menuAdmin = document.getElementById('menuAdmin');
+        var menuResetPassword = document.getElementById('menuResetPassword');
+        menuLogin.style.display = 'none';
+        menuLogout.style.display = 'block';
+        menuResetPassword.style.display = 'none';
+        if (AuthService.role() == USER_ROLES.admin) {
+            menuAdmin.style.display = 'block';
+        }
+        if (AuthService.role() == USER_ROLES.worker) {
+            menuAdmin.style.display = 'none';
+        }
+        if (AuthService.role() == USER_ROLES.user){
+            menuNewUser.style.display = 'none';
+        }
+        $timeout(function () {
+                $ionicLoading.hide();
+                $scope.data.password = "";
+                $state.go('tab.dash', {}, {reload: true});
+           }, 1000);
+                
+      }, function(err) {
+        $ionicLoading.hide();
+        $scope.displayMessage('Error de Login', err);      
+      });
+    }; //End login function
+
+    function isValid() {
+        if ($scope.data.email == "" || $scope.data.email == undefined) {
+            return false;
+        }
+        else if (!validaEmail($scope.data.email)) {
+            $ionicPopup.alert({
+                title: 'Error de Login',
+                template: 'El formato del email no es correcto.'
             });
-        };
+        }
+        if ($scope.data.password == "" || $scope.data.password == undefined) {
+            return false;
+        }
+        return true;
+    }; //End isValid function
 
-        $scope.newUser = function () {
-            $state.go('newUser');
-        };
+    function validaEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var result = re.test(email.toLowerCase());
+        return result;
+    }; //End validEmail function
 
-        $scope.resetPassword = function () {
-            $state.go('passwordReset');
-        };
+  })
 
-        function isValid() {
-            if ($scope.data.email == "" || $scope.data.email == undefined) {
-                return false;
-            }
-            else if (!validaEmail($scope.data.email)) {
-                $ionicPopup.alert({
-                    title: 'Error de Login',
-                    template: 'El formato del email no es correcto.'
-                });
-            }
-            if ($scope.data.password == "" || $scope.data.password == undefined) {
-                return false;
-            }
-            return true;
-        };
-
-        function validaEmail(email) {
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            var result = re.test(email.toLowerCase());
-            return result;
-        };
-
-        function storedMail() {
-            var query = "SELECT * FROM user";
-            openDB();
-            $cordovaSQLite.execute(db, query,[]).then(function(res) {
-                if(res.rows.length > 0){
-                    console.log(res.rows.item(0).email);
-                    return res.rows.item(0).email;
-                };
-              }, function (err) {
-                console.error(err);
-                return "";
-              });
-            /*if (testMode) {
-                return "jlagr@outlook.com"
-            }*/
-            return "";
-        };
-
-        function storeMail(email){
-            //Borra el contenido de la tabla antes de insertat uno nuevo
-            $cordovaSQLite.execute(db, "DELETE FROM user;").then(function(res) {
-                console.log("Se eliminaron los registros");
-              }, function (err) {
-                console.error(err);
-              });
-              $cordovaSQLite.execute(db, "VACUUM").then(function(res) {
-                console.log("Se limpio la bd");
-              }, function (err) {
-                console.error(err);
-              });
-            var query = "INSERT INTO user (email) VALUES (?)";
-            $cordovaSQLite.execute(db, query,[email]).then(function(res) {
-                console.log("insertId: " + res.insertId);
-              }, function (err) {
-                console.error(err);
-                return "";
-              });
-        };
-
-        function openDB(){
-            if(db == null)
-            {
-              if(cordova.platformId === "ios"){
-                // Works on iOS 
-                db = window.sqlitePlugin.openDatabase({ name: "EnRedDb.db", location: 2, createFromLocation: 1});  
-              } else{
-                // Works on android but not in iOS
-                db = $cordovaSQLite.openDB({ name: "EnRedDb.db", iosDatabaseLocation:'default'});
-              }
-            }
-        };
-    })
-
+    /*   -----------   Menú lateral  --------------- */
     .controller('NewUserCtrl', function ($scope, $ionicLoading, $timeout, $http, LoginService, $ionicPopup, $state) {
         $scope.data = {};
 
@@ -526,10 +511,11 @@ angular.module('starter.controllers', ['ngCordova'])
 
         loadAll();
         
-        $scope.test = function (){
+        $scope.doRefresh = function (){
             console.log("refresing");
             $timeout(function () {
                 loadAll();
+                $scope.data.estatus = "Todos"
                 $scope.$broadcast("scroll.infiniteScrollComplete");
                 $scope.$broadcast('scroll.refreshComplete');
             }, 1000); 

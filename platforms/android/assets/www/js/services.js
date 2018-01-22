@@ -1,5 +1,126 @@
 angular.module('starter.services', [])
 
+.service('AuthService', function($q, $http, USER_ROLES, API_ENDPOINT) {
+    var LOCAL_TOKEN_KEY = 'EnRedToken';
+    var LOCAL_USER_EMAIL = 'EnRedUserEmail';
+    var useremail = '';
+    var username = '';
+    var userempresa = '';
+    var usermovil = '';
+    var userproveedorMovil = '';
+    var isAuthenticated = false;
+    var role = '';
+    var authToken;
+  
+    function loadUserCredentials() {
+      var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
+      if (token) {
+        useCredentials(token);
+      }
+    }
+  
+    function storeUserCredentials(data, token) {
+      window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
+      if(data != undefined){
+        window.localStorage.setItem(LOCAL_USER_EMAIL, data.email)
+      }
+      
+      useCredentials(data, token);
+    }
+  
+    function useCredentials(data, token) {
+      isAuthenticated = true;
+      authToken = token;
+    
+      useremail = data.email;
+      username = data.nombre;
+      userempresa = data.empresa;
+      usermovil = data.movil;
+      userproveedorMovil = data.proveedorMovil;
+
+      if (data.rol == 'admin') {
+        role = USER_ROLES.admin
+      }
+      if (data.rol == 'worker') {
+        role = USER_ROLES.worker
+      }
+      if (data.rol == 'user') {
+        role = USER_ROLES.user
+      }
+  
+      // Set the token as header for all requests
+      $http.defaults.headers.common['X-Auth-Token'] = token;
+    }
+  
+    function destroyUserCredentials() {
+      authToken = undefined;
+      username = '';
+      isAuthenticated = false;
+      $http.defaults.headers.common['X-Auth-Token'] = undefined;
+      window.localStorage.removeItem(LOCAL_TOKEN_KEY);
+    }
+  
+    var register = function(user) {
+        return $q(function(resolve, reject) {
+          $http.post(API_ENDPOINT.url + '/signup', user).then(function(result) {
+            if (result.data.success) {
+              resolve(result.data.msg);
+            } else {
+              reject(result.data.msg);
+            }
+          });
+        });
+      };
+  
+    var login = function(email, pw) {
+      return $q(function(resolve, reject) {
+        //Crea el JSON con el formulario
+        var formData = {'p' : 'login', 'email' : email, 'password' : pw};
+        $http.post(API_ENDPOINT.url,formData).then(
+            function (response) {
+                //console.log(response);
+                if (!response.data.success) {
+                    reject(response.data.msg);
+                }
+                else {
+                    storeUserCredentials(response.data.data, response.data.token);
+                    resolve(true);
+                };
+                
+        },
+        function (err) {
+            console.error(err.data.msg);
+            reject(err.data.msg);
+        });
+      });
+    };
+  
+    var logout = function() {
+      destroyUserCredentials();
+    };
+  
+    var isAuthorized = function(authorizedRoles) {
+      if (!angular.isArray(authorizedRoles)) {
+        authorizedRoles = [authorizedRoles];
+      }
+      return (isAuthenticated && authorizedRoles.indexOf(role) !== -1);
+    };
+  
+    loadUserCredentials();
+  
+    return {
+      login: login,
+      logout: logout,
+      isAuthorized: isAuthorized,
+      isAuthenticated: function() {return isAuthenticated;},
+      username: function() {return username;},
+      role: function() {return role;},
+      userempresa: function() {return userempresa;},
+      usermovil: function() {return usermovil;},
+      userproveedorMovil: function() {return userproveedorMovil;}
+    };
+  })
+
 .service('LoginService', function ($q) {
     return {
         loginUser: function (data, User, $http) {
