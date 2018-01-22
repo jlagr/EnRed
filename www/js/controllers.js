@@ -4,8 +4,6 @@ angular.module('starter.controllers', ['ngCordova'])
     $scope.username = AuthService.username();
     isApp = !document.URL.startsWith('http');
 
-    console.log("isApp: ", isApp);
-
     $scope.$on(AUTH_EVENTS.notAuthorized, function(event) {
         $scope.displayMessage('No Autorizado','Su usuario no esta autorizado para esta función.');
     });
@@ -35,9 +33,15 @@ angular.module('starter.controllers', ['ngCordova'])
         }
     }
 
+    $scope.logout = function() {
+        AuthService.logout();
+        $state.go('login');
+        $scope.displayMessage('Sesión','Ha cerrado la sesion.');
+    }
   })
 
-  .controller('LoginCtrl', function($scope, $state, $ionicLoading, AuthService, USER_ROLES, $timeout) {
+
+.controller('LoginCtrl', function($scope, $state, $ionicLoading, AuthService, USER_ROLES, $timeout) {
     $scope.data = {};
     
     //usa el correo de usuario previamente usado
@@ -109,9 +113,13 @@ angular.module('starter.controllers', ['ngCordova'])
         return result;
     }; //End validEmail function
 
+    $scope.logout = function(){
+        console.debug('Logout');
+    }
   })
 
     /*   -----------   Menú lateral  --------------- */
+
     .controller('NewUserCtrl', function ($scope, $ionicLoading, $timeout, $http, LoginService, $ionicPopup, $state) {
         $scope.data = {};
 
@@ -259,13 +267,14 @@ angular.module('starter.controllers', ['ngCordova'])
 
     })
 
+
     .controller('ResetPasswordCtrl', function ($scope, LoginService, $ionicPopup, $state) {
 
     })
 
     /*   -----------   Usuario  --------------- */
 
-    .controller('DashCtrl', function ($scope, Tickets) {
+.controller('DashCtrl', function ($scope, Tickets) {
         $scope.dashSelectStatus = false;
         $scope.dashSelectPeriod = true;
         $scope.dashSelectNum = true;
@@ -293,12 +302,12 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.tickets = Tickets.all();
     })
 
-    .controller('TicketDetailCtrl', function ($scope, $stateParams, Tickets, User) {
+.controller('TicketDetailCtrl', function ($scope, $stateParams, Tickets, User) {
         $scope.data = User.data;
         $scope.ticket = Tickets.get($stateParams.ticketId);
     })
 
-    .controller('NewCtrl', function ($scope, $http, User, $ionicPopup, $state) {
+.controller('NewCtrl', function ($scope, $http, User, $ionicPopup, $state) {
         $scope.data = {};
 
         $scope.submitTicket = function () {
@@ -358,7 +367,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
     })
 
-    .controller('NotificationsCtrl_test', function ($scope, $http, MsgService, Mensajes, testFac) {
+.controller('NotificationsCtrl_test', function ($scope, $http, MsgService, Mensajes, testFac) {
         //$scope.mensajes = Mensajes.all();
         //$scope.mensajes = MsgService.all($http);
         $scope.mensajes = testFac.all($http);
@@ -371,7 +380,7 @@ angular.module('starter.controllers', ['ngCordova'])
         };
     })
 
-    .controller('NotificationDetailCtrl_test', function ($scope, $window, $stateParams, Mensajes) {
+.controller('NotificationDetailCtrl_test', function ($scope, $window, $stateParams, Mensajes) {
         $scope.mensaje = Mensajes.get($stateParams.Id);
 
         $scope.goToLink = function (url) {
@@ -379,7 +388,7 @@ angular.module('starter.controllers', ['ngCordova'])
         };
     })
 
-    .controller('NotificationsCtrl', ['$scope', '$http', '$state',
+.controller('NotificationsCtrl', ['$scope', '$http', '$state',
         function ($scope, $http, $state) {
             var endpoint = 'http://enreddgo.com.mx/api/notificaciones.php';
             $http.get(endpoint).success(
@@ -392,7 +401,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 });
         }])
 
-    .controller('NotificationDetailCtrl', ['$scope', '$http', '$window', '$stateParams',
+.controller('NotificationDetailCtrl', ['$scope', '$http', '$window', '$stateParams',
         function ($scope, $http, $window, $stateParams) {
             var endpoint = 'http://enreddgo.com.mx/api/notificaciones.php?mensageId=' + $stateParams.Id;
             $http.get(endpoint).success(
@@ -405,7 +414,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 });
         }])
 
-    .controller('ChatsCtrl', function ($scope, Chats) {
+.controller('ChatsCtrl', function ($scope, Chats) {
         // With the new view caching in Ionic, Controllers are only called
         // when they are recreated or on app start, instead of every page change.
         // To listen for when this page is active (for example, to refresh data),
@@ -420,11 +429,11 @@ angular.module('starter.controllers', ['ngCordova'])
         };
     })
 
-    .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
+.controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
         $scope.chat = Chats.get($stateParams.chatId);
     })
 
-    .controller('AccountCtrl', function ($scope, LoginService, $ionicPopup, $state) {
+.controller('AccountCtrl', function ($scope, LoginService, $ionicPopup, $state) {
         //$scope.settings = {
         //    enableFriends: true
         //};
@@ -452,7 +461,7 @@ angular.module('starter.controllers', ['ngCordova'])
     })
 
     /*   -----------   Administración  --------------- */
-    .controller('AdminUsersCtrl', function ($scope, $ionicLoading, $timeout, $http, $ionicPopup, $cordovaToast) {
+.controller('AdminUsersCtrl', function ($scope, $ionicLoading, $timeout, $http, $ionicPopup, $cordovaToast) {
         $scope.appUsers = {};
         $scope.data = {};
         $scope.appAllUsers = {};
@@ -530,14 +539,14 @@ angular.module('starter.controllers', ['ngCordova'])
         };
     })
 
-    .controller('AdminUsersDetailCtrl', function () {
+.controller('AdminUsersDetailCtrl', function () {
 
     })
 
-    .controller('AdminNotificationsCtrl', function () {
+.controller('AdminNotificationsCtrl', function () {
 
     })
 
-    .controller('AdminNotificationDetailCtrl', function () {
+.controller('AdminNotificationDetailCtrl', function () {
 
     })

@@ -55,6 +55,10 @@ angular.module('starter.services', [])
     function destroyUserCredentials() {
       authToken = undefined;
       username = '';
+      useremail = '';
+      usermovil = '';
+      userproveedorMovil = '';
+      userempresa = '';
       isAuthenticated = false;
       $http.defaults.headers.common['X-Auth-Token'] = undefined;
       window.localStorage.removeItem(LOCAL_TOKEN_KEY);
@@ -121,49 +125,8 @@ angular.module('starter.services', [])
     };
   })
 
-.service('LoginService', function ($q) {
-    return {
-        loginUser: function (data, User, $http) {
-            var deferred = $q.defer();
-            var promise = deferred.promise;
-             //Crea el JSON con el formulario
-            var formData = {email : data.email, password : data.password};
-            //Envia el formulario a la API
-            var endpoint = 'http://enreddgo.com.mx/api/login.php';
-       
-            $http.post(endpoint,formData).then(
-                function (response) {
-                    if (response.data[0] == 'error') {
-                        deferred.reject(response.data[1]);
-                    }
-                    else {
-                        User.data.empresa = response.data[1];
-                        User.data.nombre = response.data[2];
-                        User.data.mail = response.data[3];
-                        User.data.movil = response.data[4];
-                        User.data.rol = response.data[5];
-                        deferred.resolve('Welcome ' + User.data.empresa + '!');
-                    };
-                    
-            },
-            function (data) {
-                // Handle error
-                console.log('get error', data);
-                deferred.reject('Error de login');
-            });
-
-            promise.success = function (fn) {
-                promise.then(fn);
-                return promise;
-            }
-            promise.error = function (fn) {
-                promise.then(null, fn);
-                return promise;
-            }
-
-            return promise;
-        }
-    }
+.service('AdminService', function ($q, $http, API_ENDPOINT) {
+    
 })
 
 .service('MsgService', function () {
