@@ -63,13 +63,15 @@ angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.
     .state('newUser', {
         url: '/newUser',
         templateUrl: 'templates/newUser.html',
-        controller: 'NewUserCtrl'
+        controller: 'NewUserCtrl',
+        data: { authorizedRoles: [USER_ROLES.public]}
     })
 
     .state('passwordReset', {
         url: '/passwordReset',
         templateUrl: 'templates/resetPassword.html',
-        controller: 'ResetPasswordCtrl'
+        controller: 'ResetPasswordCtrl',
+        data: { authorizedRoles: [USER_ROLES.public]}
     })
 
   // setup an abstract state for the tabs directive
@@ -157,7 +159,7 @@ angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.
     }
   })
     .state('admin.users-detail', {
-        url: '/adminUsers/:Id',
+        url: '/adminUsers/:id',
         views: {
             'admin-users': {
                 templateUrl: 'templates/AdminUsers-detail.html',
@@ -198,6 +200,9 @@ angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.
 
     if ('data' in next && 'authorizedRoles' in next.data) {
       var authorizedRoles = next.data.authorizedRoles;
+      if(authorizedRoles.includes('public')){
+        return false;
+      }
       if (!AuthService.isAuthorized(authorizedRoles)) {
         event.preventDefault();
         $state.go($state.current, {}, {reload: true});

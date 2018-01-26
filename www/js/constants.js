@@ -8,7 +8,8 @@ angular.module('starter')
 .constant('USER_ROLES',{
   admin: 'admin',
   worker: 'worker',
-  user: 'user'
+  user: 'user',
+  public: 'public'
 })
 
 .constant('API_ENDPOINT', {

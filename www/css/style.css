@@ -182,3 +182,7 @@ label textarea {
     font-weight: normal;
     font-style:italic;
 }
+.adminUserField{
+    font-size: 14px;
+    color: darkgray;
+}

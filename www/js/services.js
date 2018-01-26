@@ -125,9 +125,159 @@ angular.module('starter.services', [])
     };
   })
 
-.service('AdminService', function ($q, $http, API_ENDPOINT) {
+.service('AdminService', function ($q, $http, API_ENDPOINT, AuthService, $state) {
     
-})
+    var loadAllUsers = function() {
+        return $q(function(resolve, reject) {
+          //Crea el JSON con el formulario
+          var formData = {'p' : 'users', 'command' : 'getAll'};
+          $http.post(API_ENDPOINT.url,formData).then(
+              function (response) {
+                  if (!response.data.success) {
+                      reject(response.data.msg);
+                  }
+                  else {
+                      resolve(response.data.result);
+                  };
+                  
+          },
+          function (err) {
+              if(err.status == 401){ //Sesion expiró
+                AuthService.logout();
+                $state.go('login');
+                reject("Su sesión ha caducado.");HTMLQuoteElement
+                }
+                else{
+                    reject(err.data.msg);
+                }
+          });
+        });
+      };
+
+    var addUser = function (nombre,email,movil,proveedorMovil,pw){
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'public', 'command':'add','nombre':nombre,
+             'email' : email, 'movil':movil, 'proveedorMovil':proveedorMovil, 'password' : pw};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    //console.log(response);
+                    if (!response.data.success) {
+                        reject(response.data.msg);
+                    }
+                    else {
+                        resolve(true);
+                    }
+            },
+            function (err) {
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data.msg);
+                }
+            });
+        });
+    }
+
+    var getAppUser = function(userId) {
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'users', 'command':'getUser', 'id':userId};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    //console.log(response);
+                    if (!response.data.success) {
+                        reject(response.data.msg);
+                    }
+                    else {
+                        resolve(response.data.result);
+                    }
+            },
+            function (err) {
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data.msg);
+                }
+            });
+        });
+    }
+
+    var getEmpresas = function() {
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'users', 'command':'getEmpresas'};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    if (!response.data.success) {
+                        reject(response.data.msg);
+                    }
+                    else {
+                        resolve(response.data.result);
+                    }
+            },
+            function (err) {
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data.msg);
+                }
+            });
+        });
+    }
+
+    var updateUser = function(id, empresa, rol, activo){
+        var valRol = 3;
+        var valActivo = 0;
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            switch (rol){
+                case "Administrador": valRol = 1; break;
+                case "Trabajador": valRol = 2; break;
+            }
+            if(activo){
+                valActivo = 1;
+            }
+            var formData = {'p' : 'users', 'command':'updateFromAdmin','id':id,'empresa':empresa,'rol':valRol,'activo':valActivo};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    if (!response.data.success) {
+                        reject(false);
+                    }
+                    else {
+                        resolve(true);
+                    }
+            },
+            function (err) {
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data);
+                }
+            });
+        });
+    }
+
+    return {
+        loadAllUsers: loadAllUsers,
+        addUser: addUser,
+        getAppUser: getAppUser,
+        getEmpresas: getEmpresas,
+        updateUser: updateUser
+      };
+}) //End AdminService
 
 .service('MsgService', function () {
     return {

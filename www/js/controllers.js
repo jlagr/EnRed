@@ -2,7 +2,6 @@ angular.module('starter.controllers', ['ngCordova'])
 
 .controller('AppCtrl', function($scope, $state, $ionicPopup, $cordovaToast, AuthService, AUTH_EVENTS) {
     $scope.username = AuthService.username();
-    isApp = !document.URL.startsWith('http');
 
     $scope.$on(AUTH_EVENTS.notAuthorized, function(event) {
         $scope.displayMessage('No Autorizado','Su usuario no esta autorizado para esta función.');
@@ -48,6 +47,9 @@ angular.module('starter.controllers', ['ngCordova'])
     var useremail = window.localStorage.getItem('EnRedUserEmail');
     if(useremail != undefined || useremail != ''){
         $scope.data.email = useremail;
+        if(testMode){
+            $scope.data.password = 'Ocampo1318';
+        }
     }
 
     $scope.login = function(data) {
@@ -120,7 +122,7 @@ angular.module('starter.controllers', ['ngCordova'])
 
     /*   -----------   Menú lateral  --------------- */
 
-    .controller('NewUserCtrl', function ($scope, $ionicLoading, $timeout, $http, LoginService, $ionicPopup, $state) {
+    .controller('NewUserCtrl', function ($scope, $ionicLoading, $timeout, $http, AdminService, $state) {
         $scope.data = {};
 
         var valBlock = document.getElementById('valBlock');
@@ -142,58 +144,25 @@ angular.module('starter.controllers', ['ngCordova'])
                 template: '<ion-spinner icon="ripple" class="spinner-calm"></ion-spinner>'
             });
 
-            //Crea el JSON con el formulario
-            var formData = {
-                command: "new",
-                nombre: $scope.data.nombre,
-                email: $scope.data.email,
-                movil: $scope.data.movil,
-                proveedorMovil: $scope.data.proveedorMovil,
-                password: $scope.data.password
-            };
-            //Envia el formulario a la API
-            var link = 'http://enreddgo.com.mx/api/users.php';
-
-            $http.post(link, formData).then(function (res) {
-                $scope.response = res.data;
-                console.log($scope.response);
-
-                if ($scope.response[0] == "OK") {
-                    $scope.data.nombre = "";
-                    $scope.data.email = "";
-                    $scope.data.movil = "";
-                    $scope.data.proveedorMovil = "Telcel";
-                    $scope.data.password = "";
-                    $timeout(function () {
+            //Envia el formulario al servicio
+            AdminService.addUser($scope.data.nombre,$scope.data.email,$scope.data.movil,$scope.data.proveedorMovil,$scope.data.password).then(function(authenticated) {
+                //Limpia los controles del formulario
+                $scope.data.nombre = "";
+                $scope.data.email = "";
+                $scope.data.movil = "";
+                $scope.data.proveedorMovil = "Telcel";
+                $scope.data.password = "";
+                $timeout(function () {
                         $ionicLoading.hide();
-                        $ionicPopup.alert({
-                            title: 'Solicitud Enviada',
-                            template: 'Recibirá un correo cuando el administrador autorice su usuario.'
-                        })
-                        $state.go('login');
-                    }, 1000);
-                }
-                else {
-                    $timeout(function () {
-                        $ionicLoading.hide();
-                        $ionicPopup.alert({
-                            title: 'Error',
-                            template: $scope.response[1]
-                        });
-                    }, 1000);
-                }
-            },
-                function (dataErr) {
-                    // Post Error
-                    console.log('post error', dataErr);
-                    $ionicLoading.hide();
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'Error de comunicación',
-                        template: 'No fue posible contactar con el servidor'
-                    });
-                });
-
-        }; //End newUser
+                        $scope.displayMessage('Solicitud Enviada','Recibirá un correo cuando el administrador autorice su usuario.')
+                        $state.go('login', {}, {reload: true});
+                   }, 1000);
+                        
+              }, function(err) {
+                $ionicLoading.hide();
+                $scope.displayMessage('Error', err);      
+              });
+            }; //End login function
 
         function isValid() {
             var errCount = 0;
@@ -461,47 +430,34 @@ angular.module('starter.controllers', ['ngCordova'])
     })
 
     /*   -----------   Administración  --------------- */
-.controller('AdminUsersCtrl', function ($scope, $ionicLoading, $timeout, $http, $ionicPopup, $cordovaToast) {
+.controller('AdminUsersCtrl', function ($scope, $rootScope, $ionicLoading, $timeout, AdminService) {
         $scope.appUsers = {};
         $scope.data = {};
         $scope.appAllUsers = {};
-
-        var formData = {command : 'getAll'};
-        var endpoint = 'http://enreddgo.com.mx/api/users.php';
         
+        $rootScope.$on("RefreshAllUsers", function(event) {
+            $scope.doRefresh();
+        });
+
         loadAll = function() {
             $ionicLoading.show({
                 template: '<ion-spinner icon="ripple" class="spinner-calm"></ion-spinner>'
             });
-            $http.post(endpoint, formData).then(function (res) {
-                console.log("Server response OK");
+
+            AdminService.loadAllUsers().then(function(res){
                 $timeout(function () {
                     $ionicLoading.hide();
-                    if (res.data[0] == "Respuesta del Servidor") {
-                        $cordovaToast.showLongBottom(res.data[1]).then(
-                            function(success) {}, function (error) {
-                                console.log("toast err: ", error)
-                            });  
-                    }
-                    else {
-                        $scope.appAllUsers = res.data;
-                        $scope.appUsers = $scope.appAllUsers;
-                    }
+                    $scope.appAllUsers = res;
+                    $scope.appUsers = $scope.appAllUsers;
                 }, 1000);
             },
-            function (dataErr) {
-                // Post Error
-                console.log('post error');
+            function(err){
                 $timeout(function () {
                     $ionicLoading.hide();
-                    $cordovaToast.showLongBottom('El servicio no responde.').then(
-                        function(success) {}, function (error) {
-                            console.log("toast err: ", error)
-                        });
+                    $scope.displayMessage('Error', 'El servicio no responde.');
                 }, 1000); 
-            });
-            //$ionicLoading.hide();    
-        };
+            })
+        }; //End load all
 
         loadAll();
         
@@ -539,9 +495,74 @@ angular.module('starter.controllers', ['ngCordova'])
         };
     })
 
-.controller('AdminUsersDetailCtrl', function () {
+.controller('AdminUsersDetailCtrl', function ($scope, $rootScope, $stateParams,$ionicLoading, $ionicHistory, $timeout, AdminService) {
+    $scope.appUser = {};
+    $scope.data = {};
+    $scope.empresas = {};
 
-    })
+    //Llama al servicio que llena el combo de las empresas
+    AdminService.getEmpresas().then(function(result){
+        $scope.empresas = result;
+    }, function(err) {
+        $scope.displayMessage('Error', err);
+    });
+
+    //Llamar al servicio que regrese los datos del usuario
+    AdminService.getAppUser($stateParams.id).then(function(data) {
+        $scope.appUser = data[0];
+        $scope.data.nombre = $scope.appUser["nombre"];
+        $scope.data.email = $scope.appUser["email"];
+        $scope.data.movil = formatPhone($scope.appUser["movil"]);
+        $scope.data.proveedorMovil = $scope.appUser["proveedorMovil"];
+        $scope.data.empresa = $scope.appUser["empresa"];
+        switch ($scope.appUser["rol"]){
+            case "1": $scope.data.rol = 'Administrador';break;
+            case "2": $scope.data.rol = "Trabajador"; break;
+            default: $scope.data.rol = "Usuario";
+        }
+        $scope.data.activo = ($scope.appUser["activo"] == "1");
+      }, function(err) {
+        $scope.displayMessage('Error', err);
+      });
+
+      function formatPhone(text) {
+        return text.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+      };
+
+    $scope.updateUser = function(){
+        //Valida que los datos básicos esten completos.
+        //console.log("Empresa: ",$scope.data.empresa,", Rol:", $scope.data.rol, ", Activo: ", $scope.data.activo);
+        if($scope.data.empresa <= 0){
+            $scope.displayMessage("Error", "Debe seleccionar una empresa.");
+            return false;
+        }
+        if($scope.data.rol == ""){
+            $scope.displayMessage("Error", "Debe seleccionar una rol.");
+            return false;
+        }
+        $ionicLoading.show({
+            template: '<ion-spinner icon="ripple" class="spinner-calm"></ion-spinner>'
+        });
+        AdminService.updateUser($stateParams.id, $scope.data.empresa, $scope.data.rol, $scope.data.activo).then(function(res) {
+            if(res){
+                $timeout(function () {
+                    $ionicLoading.hide();
+                    $ionicHistory.backView().go();
+                    $rootScope.$broadcast("RefreshAllUsers");
+                    $scope.displayMessage("EnRed","Se actualizó el usuario correctamente.");
+                }, 1000);
+            }
+            else{
+                $scope.displayMessage("Error",res.msg);
+            }
+          }, function(err) {
+            $timeout(function () {
+                $ionicLoading.hide();
+                $scope.displayMessage('Error', err);
+            }, 1000);
+          });
+    }
+})
 
 .controller('AdminNotificationsCtrl', function () {
 
