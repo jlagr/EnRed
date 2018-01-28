@@ -513,7 +513,7 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.data.nombre = $scope.appUser["nombre"];
         $scope.data.email = $scope.appUser["email"];
         $scope.data.movil = formatPhone($scope.appUser["movil"]);
-        $scope.data.proveedorMovil = $scope.appUser["proveedorMovil"];
+        $scope.data.proveedorMovil = $scope.appUser["proveedorMovil"];ionic
         $scope.data.empresa = $scope.appUser["empresa"];
         switch ($scope.appUser["rol"]){
             case "1": $scope.data.rol = 'Administrador';break;

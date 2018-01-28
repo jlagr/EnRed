@@ -1,7 +1,7 @@
 {
-  "name": "ionic-app-base",
-  "app_id": "",
+  "name": "EnRed",
   "type": "ionic1",
+  "app_id": "c2712cca",
   "integrations": {
     "gulp": {}
   },
