@@ -1,4 +1,4 @@
-angular.module('starter.services', [])
+angular.module('EnRed.services', [])
 
 .service('AuthService', function($q, $http, USER_ROLES, API_ENDPOINT) {
     var LOCAL_TOKEN_KEY = 'EnRedToken';
@@ -63,19 +63,7 @@ angular.module('starter.services', [])
       $http.defaults.headers.common['X-Auth-Token'] = undefined;
       window.localStorage.removeItem(LOCAL_TOKEN_KEY);
     }
-  
-    var register = function(user) {
-        return $q(function(resolve, reject) {
-          $http.post(API_ENDPOINT.url + '/signup', user).then(function(result) {
-            if (result.data.success) {
-              resolve(result.data.msg);
-            } else {
-              reject(result.data.msg);
-            }
-          });
-        });
-      };
-  
+    
     var login = function(email, pw) {
       return $q(function(resolve, reject) {
         //Crea el JSON con el formulario
@@ -118,6 +106,7 @@ angular.module('starter.services', [])
       isAuthorized: isAuthorized,
       isAuthenticated: function() {return isAuthenticated;},
       username: function() {return username;},
+      useremail: function() {return useremail;},
       role: function() {return role;},
       userempresa: function() {return userempresa;},
       usermovil: function() {return usermovil;},
@@ -170,6 +159,10 @@ angular.module('starter.services', [])
                     }
             },
             function (err) {
+                if(err.data.msg != undefined){
+                    reject(err.data.msg);
+                    return false;
+                }
                 if(err.status == 401){ //Sesion expiró
                     AuthService.logout();
                     $state.go('login');
@@ -235,7 +228,7 @@ angular.module('starter.services', [])
         });
     }
 
-    var updateUser = function(id, empresa, rol, activo){
+    var updateUser = function(id, empresa, rol, activo, email, nombre){
         var valRol = 3;
         var valActivo = 0;
         return $q(function(resolve, reject) {
@@ -247,7 +240,10 @@ angular.module('starter.services', [])
             if(activo){
                 valActivo = 1;
             }
-            var formData = {'p' : 'users', 'command':'updateFromAdmin','id':id,'empresa':empresa,'rol':valRol,'activo':valActivo};
+            var formData = {'p' : 'users', 'command':'updateFromAdmin','id':id,'empresa':empresa,'rol':valRol,
+            'activo':valActivo,
+            'email': email,
+            'nombre': nombre};
             $http.post(API_ENDPOINT.url,formData).then(
                 function (response) {
                     if (!response.data.success) {
@@ -268,6 +264,71 @@ angular.module('starter.services', [])
                 }
             });
         });
+    };
+
+    var validaEmail =  function validaEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var result = re.test(email.toLowerCase());
+        return result;
+    };
+    
+    var validaPassword = function validaPassword(password) {
+        var passw = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+        var result = passw.test(password);
+        return result;
+    }
+
+    var resetPassword = function(email){
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'public', 'command':'requestPasswordChange','email':email};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    if (!response.data.success) {
+                        reject(false);
+                    }
+                    else {
+                        resolve(true);
+                    }
+            },
+            function (err) {
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data);
+                }
+            });
+        });
+    };
+
+    var changePassword = function(password,token){
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'public', 'command':'updatePassword','password':password,'token':token};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    if (!response.data.success) {
+                        reject(false);
+                    }
+                    else {
+                        resolve(true);
+                    }
+            },
+            function (err) {
+                if(err.data.msg != undefined){
+                    reject(err.data.msg);
+                }
+                if(err.status == 401){ //Sesion expiró
+                    reject("El código no es válido, solicite uno nuevo.");
+                }
+                else{
+                    reject(err.data);
+                }
+            });
+        });
     }
 
     return {
@@ -275,7 +336,11 @@ angular.module('starter.services', [])
         addUser: addUser,
         getAppUser: getAppUser,
         getEmpresas: getEmpresas,
-        updateUser: updateUser
+        updateUser: updateUser,
+        validaEmail: validaEmail,
+        validaPassword: validaPassword,
+        resetPassword: resetPassword,
+        changePassword: changePassword
       };
 }) //End AdminService
 

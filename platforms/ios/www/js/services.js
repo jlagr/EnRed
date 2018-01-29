@@ -1,49 +1,360 @@
-angular.module('starter.services', [])
+angular.module('EnRed.services', [])
 
-.service('LoginService', function ($q) {
+.service('AuthService', function($q, $http, USER_ROLES, API_ENDPOINT) {
+    var LOCAL_TOKEN_KEY = 'EnRedToken';
+    var LOCAL_USER_EMAIL = 'EnRedUserEmail';
+    var useremail = '';
+    var username = '';
+    var userempresa = '';
+    var usermovil = '';
+    var userproveedorMovil = '';
+    var isAuthenticated = false;
+    var role = '';
+    var authToken;
+  
+    function loadUserCredentials() {
+      var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
+      if (token) {
+        useCredentials(token);
+      }
+    }
+  
+    function storeUserCredentials(data, token) {
+      window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
+      if(data != undefined){
+        window.localStorage.setItem(LOCAL_USER_EMAIL, data.email)
+      }
+      
+      useCredentials(data, token);
+    }
+  
+    function useCredentials(data, token) {
+      isAuthenticated = true;
+      authToken = token;
+    
+      useremail = data.email;
+      username = data.nombre;
+      userempresa = data.empresa;
+      usermovil = data.movil;
+      userproveedorMovil = data.proveedorMovil;
+
+      if (data.rol == 'admin') {
+        role = USER_ROLES.admin
+      }
+      if (data.rol == 'worker') {
+        role = USER_ROLES.worker
+      }
+      if (data.rol == 'user') {
+        role = USER_ROLES.user
+      }
+  
+      // Set the token as header for all requests
+      $http.defaults.headers.common['X-Auth-Token'] = token;
+    }
+  
+    function destroyUserCredentials() {
+      authToken = undefined;
+      username = '';
+      useremail = '';
+      usermovil = '';
+      userproveedorMovil = '';
+      userempresa = '';
+      isAuthenticated = false;
+      $http.defaults.headers.common['X-Auth-Token'] = undefined;
+      window.localStorage.removeItem(LOCAL_TOKEN_KEY);
+    }
+  
+    var register = function(user) {
+        return $q(function(resolve, reject) {
+          $http.post(API_ENDPOINT.url + '/signup', user).then(function(result) {
+            if (result.data.success) {
+              resolve(result.data.msg);
+            } else {
+              reject(result.data.msg);
+            }
+          });
+        });
+      };
+  
+    var login = function(email, pw) {
+      return $q(function(resolve, reject) {
+        //Crea el JSON con el formulario
+        var formData = {'p' : 'login', 'email' : email, 'password' : pw};
+        $http.post(API_ENDPOINT.url,formData).then(
+            function (response) {
+                //console.log(response);
+                if (!response.data.success) {
+                    reject(response.data.msg);
+                }
+                else {
+                    storeUserCredentials(response.data.data, response.data.token);
+                    resolve(true);
+                };
+                
+        },
+        function (err) {
+            console.error(err.data.msg);
+            reject(err.data.msg);
+        });
+      });
+    };
+  
+    var logout = function() {
+      destroyUserCredentials();
+    };
+  
+    var isAuthorized = function(authorizedRoles) {
+      if (!angular.isArray(authorizedRoles)) {
+        authorizedRoles = [authorizedRoles];
+      }
+      return (isAuthenticated && authorizedRoles.indexOf(role) !== -1);
+    };
+  
+    loadUserCredentials();
+  
     return {
-        loginUser: function (data, User, $http) {
-            var deferred = $q.defer();
-            var promise = deferred.promise;
-             //Crea el JSON con el formulario
-            var formData = {email : data.email, password : data.password};
-            //Envia el formulario a la API
-            var endpoint = 'http://enreddgo.com.mx/api/login.php';
-       
-            $http.post(endpoint,formData).then(
+      login: login,
+      logout: logout,
+      isAuthorized: isAuthorized,
+      isAuthenticated: function() {return isAuthenticated;},
+      username: function() {return username;},
+      role: function() {return role;},
+      userempresa: function() {return userempresa;},
+      usermovil: function() {return usermovil;},
+      userproveedorMovil: function() {return userproveedorMovil;}
+    };
+  })
+
+.service('AdminService', function ($q, $http, API_ENDPOINT, AuthService, $state) {
+    
+    var loadAllUsers = function() {
+        return $q(function(resolve, reject) {
+          //Crea el JSON con el formulario
+          var formData = {'p' : 'users', 'command' : 'getAll'};
+          $http.post(API_ENDPOINT.url,formData).then(
+              function (response) {
+                  if (!response.data.success) {
+                      reject(response.data.msg);
+                  }
+                  else {
+                      resolve(response.data.result);
+                  };
+                  
+          },
+          function (err) {
+              if(err.status == 401){ //Sesion expiró
+                AuthService.logout();
+                $state.go('login');
+                reject("Su sesión ha caducado.");HTMLQuoteElement
+                }
+                else{
+                    reject(err.data.msg);
+                }
+          });
+        });
+      };
+
+    var addUser = function (nombre,email,movil,proveedorMovil,pw){
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'public', 'command':'add','nombre':nombre,
+             'email' : email, 'movil':movil, 'proveedorMovil':proveedorMovil, 'password' : pw};
+            $http.post(API_ENDPOINT.url,formData).then(
                 function (response) {
-                    if (response.data[0] == 'error') {
-                        deferred.reject(response.data[1]);
+                    //console.log(response);
+                    if (!response.data.success) {
+                        reject(response.data.msg);
                     }
                     else {
-                        User.data.empresa = response.data[1];
-                        User.data.nombre = response.data[2];
-                        User.data.mail = response.data[3];
-                        User.data.movil = response.data[4];
-                        User.data.rol = response.data[5];
-                        deferred.resolve('Welcome ' + User.data.empresa + '!');
-                    };
-                    
+                        resolve(true);
+                    }
             },
-            function (data) {
-                // Handle error
-                console.log('get error', data);
-                deferred.reject('Error de login');
+            function (err) {
+                if(err.data.msg != undefined){
+                    reject(err.data.msg);
+                    return false;
+                }
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data.msg);
+                }
             });
-
-            promise.success = function (fn) {
-                promise.then(fn);
-                return promise;
-            }
-            promise.error = function (fn) {
-                promise.then(null, fn);
-                return promise;
-            }
-
-            return promise;
-        }
+        });
     }
-})
+
+    var getAppUser = function(userId) {
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'users', 'command':'getUser', 'id':userId};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    //console.log(response);
+                    if (!response.data.success) {
+                        reject(response.data.msg);
+                    }
+                    else {
+                        resolve(response.data.result);
+                    }
+            },
+            function (err) {
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data.msg);
+                }
+            });
+        });
+    }
+
+    var getEmpresas = function() {
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'users', 'command':'getEmpresas'};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    if (!response.data.success) {
+                        reject(response.data.msg);
+                    }
+                    else {
+                        resolve(response.data.result);
+                    }
+            },
+            function (err) {
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data.msg);
+                }
+            });
+        });
+    }
+
+    var updateUser = function(id, empresa, rol, activo, email, nombre){
+        var valRol = 3;
+        var valActivo = 0;
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            switch (rol){
+                case "Administrador": valRol = 1; break;
+                case "Trabajador": valRol = 2; break;
+            }
+            if(activo){
+                valActivo = 1;
+            }
+            var formData = {'p' : 'users', 'command':'updateFromAdmin','id':id,'empresa':empresa,'rol':valRol,
+            'activo':valActivo,
+            'email': email,
+            'nombre': nombre};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    if (!response.data.success) {
+                        reject(false);
+                    }
+                    else {
+                        resolve(true);
+                    }
+            },
+            function (err) {
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data);
+                }
+            });
+        });
+    };
+
+    var validaEmail =  function validaEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var result = re.test(email.toLowerCase());
+        return result;
+    };
+    
+    var validaPassword = function validaPassword(password) {
+        var passw = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+        var result = passw.test(password);
+        return result;
+    }
+
+    var resetPassword = function(email){
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'users', 'command':'updateFromAdmin','id':id,'empresa':empresa,'rol':valRol,
+            'activo':valActivo,
+            'email': email,
+            'nombre': nombre};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    if (!response.data.success) {
+                        reject(false);
+                    }
+                    else {
+                        resolve(true);
+                    }
+            },
+            function (err) {
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data);
+                }
+            });
+        });
+    };
+
+    var changePassword = function(email,password,token){
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'public', 'command':'updatePassword','email':email,'password':password,'token':token};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    if (!response.data.success) {
+                        reject(false);
+                    }
+                    else {
+                        resolve(true);
+                    }
+            },
+            function (err) {
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data);
+                }
+            });
+        });
+    }
+
+    return {
+        loadAllUsers: loadAllUsers,
+        addUser: addUser,
+        getAppUser: getAppUser,
+        getEmpresas: getEmpresas,
+        updateUser: updateUser,
+        validaEmail: validaEmail,
+        validaPassword: validaPassword,
+        resetPassword: resetPassword
+      };
+}) //End AdminService
 
 .service('MsgService', function () {
     return {

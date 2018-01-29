@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['ngCordova'])
+angular.module('EnRed.controllers', ['ngCordova'])
 
 .controller('AppCtrl', function($scope, $state, $ionicPopup, $cordovaToast, AuthService, AUTH_EVENTS) {
     $scope.username = AuthService.username();
@@ -34,15 +34,31 @@ angular.module('starter.controllers', ['ngCordova'])
 
     $scope.logout = function() {
         AuthService.logout();
+        var menuLogin = document.getElementById('menuLogin');
+        var menuLogout = document.getElementById('menuLogout');
+        var menuNewUser = document.getElementById('menuNewUser');
+        var menuAdmin = document.getElementById('menuAdmin');
+        var menuAdmin = document.getElementById('menuAdmin');
+        var menuResetPassword = document.getElementById('menuResetPassword');
+        menuLogin.style.display = 'block';
+        menuLogout.style.display = 'none';
+        menuResetPassword.style.display = 'block';
+        menuAdmin.style.display = 'none';
+        menuNewUser.style.display = 'block'; 
         $state.go('login');
-        $scope.displayMessage('Sesión','Ha cerrado la sesion.');
     }
   })
 
 
 .controller('LoginCtrl', function($scope, $state, $ionicLoading, AuthService, USER_ROLES, $timeout) {
     $scope.data = {};
-    
+    var menuLogin = document.getElementById('menuLogin');
+    var menuLogout = document.getElementById('menuLogout');
+    var menuNewUser = document.getElementById('menuNewUser');
+    var menuAdmin = document.getElementById('menuAdmin');
+    var menuAdmin = document.getElementById('menuAdmin');
+    var menuResetPassword = document.getElementById('menuResetPassword');    
+        
     //usa el correo de usuario previamente usado
     var useremail = window.localStorage.getItem('EnRedUserEmail');
     if(useremail != undefined || useremail != ''){
@@ -63,12 +79,6 @@ angular.module('starter.controllers', ['ngCordova'])
 
       AuthService.login($scope.data.email, $scope.data.password).then(function(authenticated) {
         $scope.setCurrentUsername(AuthService.username());
-        var menuLogin = document.getElementById('menuLogin');
-        var menuLogout = document.getElementById('menuLogout');
-        var menuNewUser = document.getElementById('menuNewUser');
-        var menuAdmin = document.getElementById('menuAdmin');
-        var menuAdmin = document.getElementById('menuAdmin');
-        var menuResetPassword = document.getElementById('menuResetPassword');
         menuLogin.style.display = 'none';
         menuLogout.style.display = 'block';
         menuResetPassword.style.display = 'none';
@@ -114,10 +124,6 @@ angular.module('starter.controllers', ['ngCordova'])
         var result = re.test(email.toLowerCase());
         return result;
     }; //End validEmail function
-
-    $scope.logout = function(){
-        console.debug('Logout');
-    }
   })
 
     /*   -----------   Menú lateral  --------------- */
@@ -177,7 +183,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 addErr("El email es un dato obligatorio.");
                 errCount++;
             }
-            else if (!validaEmail($scope.data.email)) {
+            else if (!AdminService.validaEmail($scope.data.email)) {
                 addErr("El email no es válido.");
                 errCount++;
             }
@@ -194,7 +200,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 addErr("El password es un dato obligatorio.");
                 errCount++;
             }
-            else if (!validaPassword($scope.data.password)) {
+            else if (!AdminService.validaPassword($scope.data.password)) {
                 addErr("El password no cumple con las reglas de seguridad.");
                 errCount++;
             }
@@ -221,28 +227,96 @@ angular.module('starter.controllers', ['ngCordova'])
             var result = re.test(movil);
             return result;
         }
-
-        function validaEmail(email) {
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            var result = re.test(email.toLowerCase());
-            return result;
-        };
-
-        function validaPassword(password) {
-            var passw = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-            var result = passw.test(password);
-            return result;
-        }
-
     })
 
+    .controller('ResetPasswordCtrl', function ($scope, AdminService, $timeout, $ionicLoading, $state, $cordovaBarcodeScanner) {
+        $scope.data = {};
+        $scope.token = '';
 
-    .controller('ResetPasswordCtrl', function ($scope, LoginService, $ionicPopup, $state) {
+        var paso1 = document.getElementById('paso1');
+        var paso2 = document.getElementById('paso2');
+        
+        paso1.style.display = 'block';
+        paso2.style.display = 'none';
 
-    })
+        $scope.PasswordReset = function(){
+            if(!AdminService.validaEmail($scope.data.email)){
+                $scope.displayMessage('Error','El email no es válido');
+                return false;
+            }
+            //Muestra el spinner
+            $ionicLoading.show({
+                template: '<ion-spinner icon="ripple" class="spinner-calm"></ion-spinner>'
+            });
+            AdminService.resetPassword($scope.data.email).then(function(response) {
+                //Limpia los controles del formulario
+                $scope.data.email = "";
+                $timeout(function () {
+                        $ionicLoading.hide();
+                        $scope.displayMessage('Solicitud Enviada','Recibirá un correo con el código QR para cambiar el password.')
+                        $state.go('login', {}, {reload: true});
+                   }, 1000);
+                        
+              }, function(err) {
+                $timeout(function () {
+                    $ionicLoading.hide();
+                    $scope.displayMessage('Error', err);
+               }, 1000);      
+              });
+        }; //End PasswordReset
 
-    /*   -----------   Usuario  --------------- */
+        $scope.scanCode = function(){
+            if(testMode){
+                $scope.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1MTcyNjk2MjUsImF1ZCI6ImUwNDk0YzkxNGVjNzdjMmQzYjdmYzI4YTdjNGYxZmYwNWJlOTE5Y2MiLCJkYXRhIjp7ImlkIjoiMSIsImVtYWlsIjoiamxhZ3JAb3V0bG9vay5jb20iLCJub21icmUiOiJKb3NcdTAwZTkgTHVpcyBBcnR1cm8gR29uelx1MDBlMWxleiBSb2phcyJ9fQ._JeKp9yvqPUUCasw2qm-FiEB9q_jJl4GJYOGjR3sjcw";
+                paso1.style.display = 'none';
+                paso2.style.display = 'block';
+                return true;
+            }
+            $cordovaBarcodeScanner.scan().then(function(barcodeData) {
+                paso1.style.display = 'none';
+                paso2.style.display = 'block';
+                $scope.token = barcodeData.text;
+                }, function(err) {
+                    $scope.displayMessage('Error', err);
+                    return false;  
+                });
+        }; //End scanCode
 
+        $scope.changePassword = function(){
+            if(!AdminService.validaPassword($scope.data.password)){
+                $scope.displayMessage('Error','El password no cumple con las reglas de seguridad.');
+                return false;
+            }
+            //Muestra el spinner
+            $ionicLoading.show({
+                template: '<ion-spinner icon="ripple" class="spinner-calm"></ion-spinner>'
+            });
+            AdminService.changePassword($scope.data.password,$scope.token).then(function(response) {
+                //Limpia los controles del formulario
+                $scope.data.password = "";
+                $scope.token = '';
+                paso1.style.display = 'block';
+                paso2.style.display = 'none';
+                $timeout(function () {
+                        $ionicLoading.hide();
+                        $scope.displayMessage('EnRed','Su password fué actualizado correctamente.')
+                        $state.go('login', {}, {reload: true});
+                   }, 1000);
+                        
+              }, function(err) {
+                $ionicLoading.hide();
+                $scope.data.password = "";
+                $scope.token = '';
+                paso1.style.display = 'block';
+                paso2.style.display = 'none';
+                $scope.displayMessage('Error', err);      
+              });
+            
+        }; //End changePassword
+
+    }) //End ResetPasswordCtrl
+
+/*   -----------   Usuario  --------------- */
 .controller('DashCtrl', function ($scope, Tickets) {
         $scope.dashSelectStatus = false;
         $scope.dashSelectPeriod = true;
@@ -402,15 +476,18 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.chat = Chats.get($stateParams.chatId);
     })
 
-.controller('AccountCtrl', function ($scope, LoginService, $ionicPopup, $state) {
-        //$scope.settings = {
-        //    enableFriends: true
-        //};
+.controller('AccountCtrl', function ($scope, $state, AuthService) {
+        $scope.data = {};
+        $scope.data.nombre = AuthService.username();
+        $scope.data.email = AuthService.useremail();
+        $scope.data.empresa = AuthService.userempresa();
+        $scope.data.movil = AuthService.usermovil();
+        $scope.data.proveedorMovil = AuthService.userproveedorMovil();
+        
         $scope.updateAccount = function () {
-            var alertPopup = $ionicPopup.alert({
-                title: 'Mi Cuenta',
-                template: 'Sus datos se actualizaron correctamente.'
-            });
+            if(!isValid()){
+                return false;
+            }
         };
 
         $scope.logout = function () {
@@ -420,13 +497,18 @@ angular.module('starter.controllers', ['ngCordova'])
             var menuNewUser = document.getElementById('menuNewUser');
             var menuAdmin = document.getElementById('menuAdmin');
             var menuResetPassword = document.getElementById('menuResetPassword');
-            menuLogout.style.display = 'none';
             menuLogin.style.display = 'block';
+            menuLogout.style.display = 'none';
             menuNewUser.style.display = 'block';
             menuAdmin.style.display = 'none';
             menuResetPassword.style.display = 'block';
+            AuthService.logout();
             $state.go('login');
         };
+
+        function isValid(){
+            
+        }
     })
 
     /*   -----------   Administración  --------------- */
@@ -513,7 +595,7 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.data.nombre = $scope.appUser["nombre"];
         $scope.data.email = $scope.appUser["email"];
         $scope.data.movil = formatPhone($scope.appUser["movil"]);
-        $scope.data.proveedorMovil = $scope.appUser["proveedorMovil"];ionic
+        $scope.data.proveedorMovil = $scope.appUser["proveedorMovil"];
         $scope.data.empresa = $scope.appUser["empresa"];
         switch ($scope.appUser["rol"]){
             case "1": $scope.data.rol = 'Administrador';break;
@@ -543,7 +625,8 @@ angular.module('starter.controllers', ['ngCordova'])
         $ionicLoading.show({
             template: '<ion-spinner icon="ripple" class="spinner-calm"></ion-spinner>'
         });
-        AdminService.updateUser($stateParams.id, $scope.data.empresa, $scope.data.rol, $scope.data.activo).then(function(res) {
+        AdminService.updateUser($stateParams.id, $scope.data.empresa, $scope.data.rol, 
+            $scope.data.activo, $scope.data.email, $scope.data.nombre).then(function(res) {
             if(res){
                 $timeout(function () {
                     $ionicLoading.hide();

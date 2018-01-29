@@ -8,7 +8,7 @@
 var db = null;
 var testMode = true;
 
-angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.services'])
+angular.module('EnRed', ['ionic','ngCordova', 'EnRed.controllers', 'EnRed.services'])
 
 .run(function($ionicPlatform, $cordovaSQLite) {
   $ionicPlatform.ready(function() {

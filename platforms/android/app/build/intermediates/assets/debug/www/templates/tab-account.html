@@ -1,0 +1,32 @@
+<ion-view view-title="Mi Cuenta">
+  <ion-content>
+    <div class="list list-inset">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Nombre Completo</span>
+            <input type="text" placeholder="Nombre Completo" ng-model="data.nombre">
+        </label>
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Empresa</span>
+            <input type="text" placeholder="Empresa" ng-model="data.empresa">
+        </label>
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Email</span>
+            <input type="text" placeholder="Email" ng-model="data.email">
+        </label>
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Tel. Movil</span>
+            <input type="text" placeholder="Tel. Movil" ng-model="data.movil">
+        </label>
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Password</span>
+            <input type="password" placeholder="Password" ng-model="data.password">
+        </label>
+    </div>
+
+    <div class="button-bar button-clear">
+        <a class="button button-calm button-poitive" ng-click="updateAccount()">Actualizar</a>
+        &nbsp;
+        <a class="button button-calm button-poitive" ng-click="logout()">Cerrar Sesi&oacute;n</a>
+    </div>
+  </ion-content>
+</ion-view>

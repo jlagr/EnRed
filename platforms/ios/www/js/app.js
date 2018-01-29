@@ -8,7 +8,7 @@
 var db = null;
 var testMode = true;
 
-angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.services'])
+angular.module('EnRed', ['ionic','ngCordova', 'EnRed.controllers', 'EnRed.services'])
 
 .run(function($ionicPlatform, $cordovaSQLite) {
   $ionicPlatform.ready(function() {
@@ -25,9 +25,21 @@ angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.
     }
     
     //Crea la base de datos local y una tabla para guardar el email
-    db = $cordovaSQLite.openDB( {name: "EnRedDb"} );
-    $cordovaSQLite.excecute(db, "CREATE TABLE IF NOT EXISTS user (id integer primary key, email text)");
-
+    /*function openDB(){
+      if(db == null)
+      {
+        if(cordova.platformId === "ios"){
+          // Works on iOS 
+          db = window.sqlitePlugin.openDatabase({ name: "EnRedDb.db", location: 2, createFromLocation: 1});  
+        } else{
+          // Works on android but not in iOS
+          db = $cordovaSQLite.openDB({ name: "EnRedDb.db", iosDatabaseLocation:'default'});
+        }
+      }
+    }
+    openDB();
+    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS user (id integer primary key, email text)");
+    */
     if (window.Connection) {
         if (navigator.connection.type == Connection.NONE) {
             alert('No hay conexi�n a internet');
@@ -40,12 +52,7 @@ angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
-
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
+.config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
   $stateProvider
     .state('login', {
         url: '/login',
@@ -56,13 +63,15 @@ angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.
     .state('newUser', {
         url: '/newUser',
         templateUrl: 'templates/newUser.html',
-        controller: 'NewUserCtrl'
+        controller: 'NewUserCtrl',
+        data: { authorizedRoles: [USER_ROLES.public]}
     })
 
     .state('passwordReset', {
         url: '/passwordReset',
         templateUrl: 'templates/resetPassword.html',
-        controller: 'ResetPasswordCtrl'
+        controller: 'ResetPasswordCtrl',
+        data: { authorizedRoles: [USER_ROLES.public]}
     })
 
   // setup an abstract state for the tabs directive
@@ -144,10 +153,13 @@ angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.
         templateUrl: 'templates/admin-users.html',
         controller: 'AdminUsersCtrl'
       }
+    },
+    data: {
+      authorizedRoles: [USER_ROLES.admin]
     }
   })
     .state('admin.users-detail', {
-        url: '/adminUsers/:Id',
+        url: '/adminUsers/:id',
         views: {
             'admin-users': {
                 templateUrl: 'templates/AdminUsers-detail.html',
@@ -176,6 +188,33 @@ angular.module('starter', ['ionic','ngCordova', 'starter.controllers', 'starter.
     })  
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  //$urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise(function ($injector, $location) {
+    var $state = $injector.get("$state");
+    $state.go("login");
+  });
+})
 
-});
+.run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+  $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
+
+    if ('data' in next && 'authorizedRoles' in next.data) {
+      var authorizedRoles = next.data.authorizedRoles;
+      if(authorizedRoles.includes('public')){
+        return false;
+      }
+      if (!AuthService.isAuthorized(authorizedRoles)) {
+        event.preventDefault();
+        $state.go($state.current, {}, {reload: true});
+        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+      }
+    }
+
+    if (!AuthService.isAuthenticated()) {
+      if (next.name !== 'login') {
+        event.preventDefault();
+        $state.go('login');
+      }
+    }
+  });
+})

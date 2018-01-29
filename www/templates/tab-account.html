@@ -7,19 +7,24 @@
         </label>
         <label class="item item-input item-floating-label">
             <span class="input-label">Empresa</span>
-            <input type="text" placeholder="Empresa" ng-model="data.empresa">
+            <input type="text" placeholder="Empresa" ng-model="data.empresa" readonly>
         </label>
         <label class="item item-input item-floating-label">
             <span class="input-label">Email</span>
-            <input type="text" placeholder="Email" ng-model="data.email">
+            <input type="text" placeholder="Email" ng-model="data.email" readonly>
         </label>
         <label class="item item-input item-floating-label">
             <span class="input-label">Tel. Movil</span>
             <input type="text" placeholder="Tel. Movil" ng-model="data.movil">
         </label>
-        <label class="item item-input item-floating-label">
-            <span class="input-label">Password</span>
-            <input type="password" placeholder="Password" ng-model="data.password">
+        <label class="item item-input item-select selectMovilProvider">
+            <label for="proveedor">Proveedor:</label>
+                <select ng-init="data.proveedorMovil = 'Telcel'" id="proveedor" ng-model="data.proveedorMovil" >
+                    <option>Telcel</option>
+                    <option>AT&T</option>
+                    <option>Movistar</option>
+                    <option>Otro</option>
+                </select>
         </label>
     </div>
 
