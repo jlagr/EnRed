@@ -232,12 +232,17 @@ angular.module('EnRed.controllers', ['ngCordova'])
     .controller('ResetPasswordCtrl', function ($scope, AdminService, $timeout, $ionicLoading, $state, $cordovaBarcodeScanner) {
         $scope.data = {};
         $scope.token = '';
-
         var paso1 = document.getElementById('paso1');
         var paso2 = document.getElementById('paso2');
         
-        paso1.style.display = 'block';
-        paso2.style.display = 'none';
+        $scope.$on('$ionicView.enter', function(scope, states) {
+            if(states.fromCache && states.stateName == 'tab.new'){
+                paso1.style.display = 'block';
+                paso2.style.display = 'none';
+            }
+        });
+
+        
 
         $scope.PasswordReset = function(){
             if(!AdminService.validaEmail($scope.data.email)){
@@ -273,9 +278,14 @@ angular.module('EnRed.controllers', ['ngCordova'])
                 return true;
             }
             $cordovaBarcodeScanner.scan().then(function(barcodeData) {
-                paso1.style.display = 'none';
-                paso2.style.display = 'block';
-                $scope.token = barcodeData.text;
+                if(!barcodeData.cancelled){
+                    paso1.style.display = 'none';
+                    paso2.style.display = 'block';
+                    $scope.token = barcodeData.text;
+                    console.log("Scan successful");
+                  } else {
+                    console.log("Scan cancelled");
+                  }
                 }, function(err) {
                     $scope.displayMessage('Error', err);
                     return false;  
@@ -283,6 +293,10 @@ angular.module('EnRed.controllers', ['ngCordova'])
         }; //End scanCode
 
         $scope.changePassword = function(){
+            if($scope.data.password != $scope.data.password2){
+                $scope.displayMessage('Error','Los dos passwords no coinciden.');
+                return false;
+            }
             if(!AdminService.validaPassword($scope.data.password)){
                 $scope.displayMessage('Error','El password no cumple con las reglas de seguridad.');
                 return false;
@@ -314,6 +328,10 @@ angular.module('EnRed.controllers', ['ngCordova'])
             
         }; //End changePassword
 
+        $scope.cancel = function(){
+            paso1.style.display = 'block';
+            paso2.style.display = 'none';
+        }
     }) //End ResetPasswordCtrl
 
 /*   -----------   Usuario  --------------- */
@@ -350,8 +368,43 @@ angular.module('EnRed.controllers', ['ngCordova'])
         $scope.ticket = Tickets.get($stateParams.ticketId);
     })
 
-.controller('NewCtrl', function ($scope, $http, User, $ionicPopup, $state) {
+.controller('NewCtrl', function ($scope, $http, $ionicPopover, User, $ionicPopup, $state) {
         $scope.data = {};
+
+        $scope.$on('$ionicView.enter', function(scope, states) {
+            if(states.fromCache && states.stateName == 'tab.new'){
+                showTextarea();
+            }
+        });
+
+        $scope.showTextarea = function(){
+            $scope.Textarea = false;
+            $scope.Gallery = true;
+            $scope.Map = true;
+        }
+
+        $scope.showGallery = function(){
+            $scope.Textarea = true;
+            $scope.Gallery = false;
+            $scope.Map = true;
+        }
+
+        $scope.showMap = function(){
+            $scope.Textarea = true;
+            $scope.Gallery = true;
+            $scope.Map = false;
+        }
+
+        $ionicPopover.fromTemplateUrl('templates/popover.html',{
+            animation : 'slide-in-up',
+            scope : $scope
+        }).then(function(p){
+            $scope.popover = p;
+        })
+
+        $scope.openPopover = function(e){
+            $scope.popover.show(e)
+        }
 
         $scope.submitTicket = function () {
             var link = 'http://enreddgo.com.mx/api/newTicket.php';
@@ -476,16 +529,97 @@ angular.module('EnRed.controllers', ['ngCordova'])
         $scope.chat = Chats.get($stateParams.chatId);
     })
 
-.controller('AccountCtrl', function ($scope, $ionicPopup, $state) {
-        //$scope.settings = {
-        //    enableFriends: true
-        //};
+.controller('AccountCtrl', function ($scope, $state, $ionicLoading, $timeout, $ionicHistory, AuthService, AdminService, UserService) {
+        $scope.data = {};
+
+        $scope.data.nombre = AuthService.username();
+        $scope.data.email = AuthService.useremail();
+        $scope.data.empresa = AuthService.userempresa();
+        $scope.data.movil = AuthService.usermovil();
+        $scope.data.proveedorMovil = AuthService.userproveedorMovil();
+
+        $scope.$on('$ionicView.enter', function(scope, states) {
+            if(states.fromCache && states.stateName == 'tab.new'){
+                $scope.data.nombre = AuthService.username();
+                $scope.data.email = AuthService.useremail();
+                $scope.data.empresa = AuthService.userempresa();
+                $scope.data.movil = AuthService.usermovil();
+                $scope.data.proveedorMovil = AuthService.userproveedorMovil();
+            }
+        });
+        
         $scope.updateAccount = function () {
-            var alertPopup = $ionicPopup.alert({
-                title: 'Mi Cuenta',
-                template: 'Sus datos se actualizaron correctamente.'
+            if(!isValid()){
+                return false;
+            }
+            
+            //Muestra el spinner
+            $ionicLoading.show({
+                template: '<ion-spinner icon="ripple" class="spinner-calm"></ion-spinner>'
             });
+            UserService.updateAccount($scope.data.nombre, $scope.data.email, $scope.data.movil, $scope.data.proveedorMovil).then(function(response) {
+                $timeout(function () {
+                        $ionicLoading.hide();
+                        AuthService.updateUserData($scope.data.nombre, $scope.data.email, $scope.data.movil, $scope.data.proveedorMovil);
+                        $scope.displayMessage('EnRed','Sus datos se actualizaron.')
+                        $ionicHistory.backView().go();
+                   }, 1000);
+                        
+              }, function(err) {
+                $ionicLoading.hide();
+                $scope.displayMessage('Error', err);      
+              });
+            
+        }; //End updateAccout
+
+        function isValid() {
+            var errCount = 0;
+            var list = document.getElementById('valMessage');
+            list.innerHTML = "";
+
+            if ($scope.data.nombre == "" || $scope.data.nombre == undefined) {
+                addErr("El nombre es un dato obligatorio");
+                errCount++;
+            }
+            if ($scope.data.email == "" || $scope.data.email == undefined) {
+                addErr("El email es un dato obligatorio.");
+                errCount++;
+            }
+            else if (!AdminService.validaEmail($scope.data.email)) {
+                addErr("El email no es válido.");
+                errCount++;
+            }
+            if ($scope.data.movil == "" || $scope.data.movil == undefined) {
+                addErr("El tel. movil es un dato obligatorio.");
+                errCount++;
+            }
+            else if (!validaMovil($scope.data.movil)) {
+                addErr("El tel. movil es invalido.");
+                errCount++;
+            }
+            if (errCount > 0) {
+                var valBlock = document.getElementById('valBlock');
+                valBlock.style.display = 'block';
+            }
+            else {
+                var valBlock = document.getElementById('valBlock');
+                valBlock.style.display = 'none';
+            }
+            return (errCount == 0);
         };
+
+        function addErr(errMessage) {
+            var list = document.getElementById('valMessage');
+            var entry = document.createElement('li');
+            entry.appendChild(document.createTextNode(errMessage));
+            list.appendChild(entry);
+        }
+
+        function validaMovil(movil) {
+            var re = /^\d{10}$/;
+            var result = re.test(movil);
+            return result;
+        }
 
         $scope.logout = function () {
             //Muestra la opcion de login del menu y oculta la de logout
@@ -494,14 +628,15 @@ angular.module('EnRed.controllers', ['ngCordova'])
             var menuNewUser = document.getElementById('menuNewUser');
             var menuAdmin = document.getElementById('menuAdmin');
             var menuResetPassword = document.getElementById('menuResetPassword');
-            menuLogout.style.display = 'none';
             menuLogin.style.display = 'block';
+            menuLogout.style.display = 'none';
             menuNewUser.style.display = 'block';
             menuAdmin.style.display = 'none';
             menuResetPassword.style.display = 'block';
+            AuthService.logout();
             $state.go('login');
         };
-    })
+    }) //End AccountCtrl
 
     /*   -----------   Administración  --------------- */
 .controller('AdminUsersCtrl', function ($scope, $rootScope, $ionicLoading, $timeout, AdminService) {
@@ -587,7 +722,7 @@ angular.module('EnRed.controllers', ['ngCordova'])
         $scope.data.nombre = $scope.appUser["nombre"];
         $scope.data.email = $scope.appUser["email"];
         $scope.data.movil = formatPhone($scope.appUser["movil"]);
-        $scope.data.proveedorMovil = $scope.appUser["proveedorMovil"];ionic
+        $scope.data.proveedorMovil = $scope.appUser["proveedorMovil"];
         $scope.data.empresa = $scope.appUser["empresa"];
         switch ($scope.appUser["rol"]){
             case "1": $scope.data.rol = 'Administrador';break;

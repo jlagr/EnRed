@@ -4,32 +4,32 @@ ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/A
 INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
 INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
 INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
-MERGED from [com.android.support:support-v4:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/1d756ec956b727631005aa4d7870f576/AndroidManifest.xml:17:1-22:12
-MERGED from [:barcodescanner-release-2.1.5:] /Users/usuario/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:2:1-14:12
+MERGED from [com.android.support:support-v4:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/14d201fd2deddb7ae3ea83cb817c2f8d/AndroidManifest.xml:17:1-22:12
+MERGED from [:barcodescanner-release-2.1.5:] /private/var/root/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:2:1-14:12
 MERGED from [:CordovaLib] /Users/usuario/Documents/ionic/EnRed/platforms/android/CordovaLib/build/intermediates/manifests/full/debug/AndroidManifest.xml:20:1-27:12
-MERGED from [com.android.support:support-media-compat:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.0.2.aar/480a6fb822047315f9a487df2153c9a4/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-fragment:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/f53873d705db3f089c3cdeb4b3aedfa9/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-core-utils:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/a27f67b37465516066cf4dd66bc3507b/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-core-ui:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/185e4061814064a2558ffcc7d96b0360/AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-compat:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/b45d7ff1beb9fa0297a668b48c99ce55/AndroidManifest.xml:17:1-22:12
-MERGED from [android.arch.lifecycle:runtime:1.0.3] /Users/usuario/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/440be05a26aa5d3ed8c47e165eabbd9c/AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:support-media-compat:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.0.2.aar/585e2346e8ce54d567e83411dfc51321/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/eb28819404b200d71759e09028178d48/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/beb7069e04f75d7609de074f64ac6ebd/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/2b67d3eef91a9df01092d05107d876b4/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/8fe42b2ea5e167e165a35242e239bb75/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.0.3] /private/var/root/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/ca46558e9500ee3cfd171f4aed11a711/AndroidManifest.xml:17:1-24:12
 INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
 INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
 INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
 	package
-		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:98-124
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:102-127
 		INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml
 	android:versionName
-		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:70-97
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:74-101
 		INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml
 	android:hardwareAccelerated
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:11-45
 	xmlns:android
-		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:125-183
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:128-186
 	android:versionCode
-		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:46-69
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:46-73
 		INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml
 supports-screens
@@ -52,8 +52,8 @@ ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/A
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:4:22-64
 application
 ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:5:5-14:19
-MERGED from [:barcodescanner-release-2.1.5:] /Users/usuario/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:11:5-12:19
-MERGED from [:barcodescanner-release-2.1.5:] /Users/usuario/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:11:5-12:19
+MERGED from [:barcodescanner-release-2.1.5:] /private/var/root/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:11:5-12:19
+MERGED from [:barcodescanner-release-2.1.5:] /private/var/root/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:11:5-12:19
 	android:supportsRtl
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:5:114-140
 	android:label
@@ -62,7 +62,7 @@ MERGED from [:barcodescanner-release-2.1.5:] /Users/usuario/.gradle/caches/trans
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:5:18-52
 	android:icon
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:5:53-80
-activity#io.ionic.starter.MainActivity
+activity#mx.com.enreddgo.MainActivity
 ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:6:9-11:20
 	android:label
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:6:97-134
@@ -110,24 +110,24 @@ ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/A
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:13:41-109
 uses-sdk
 ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:15:5-74
-MERGED from [com.android.support:support-v4:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/1d756ec956b727631005aa4d7870f576/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-v4:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/1d756ec956b727631005aa4d7870f576/AndroidManifest.xml:20:5-44
-MERGED from [:barcodescanner-release-2.1.5:] /Users/usuario/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:7:5-9:41
-MERGED from [:barcodescanner-release-2.1.5:] /Users/usuario/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:support-v4:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/14d201fd2deddb7ae3ea83cb817c2f8d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/14d201fd2deddb7ae3ea83cb817c2f8d/AndroidManifest.xml:20:5-44
+MERGED from [:barcodescanner-release-2.1.5:] /private/var/root/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:7:5-9:41
+MERGED from [:barcodescanner-release-2.1.5:] /private/var/root/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:7:5-9:41
 MERGED from [:CordovaLib] /Users/usuario/Documents/ionic/EnRed/platforms/android/CordovaLib/build/intermediates/manifests/full/debug/AndroidManifest.xml:25:5-44
 MERGED from [:CordovaLib] /Users/usuario/Documents/ionic/EnRed/platforms/android/CordovaLib/build/intermediates/manifests/full/debug/AndroidManifest.xml:25:5-44
-MERGED from [com.android.support:support-media-compat:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.0.2.aar/480a6fb822047315f9a487df2153c9a4/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-media-compat:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.0.2.aar/480a6fb822047315f9a487df2153c9a4/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-fragment:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/f53873d705db3f089c3cdeb4b3aedfa9/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-fragment:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/f53873d705db3f089c3cdeb4b3aedfa9/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-utils:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/a27f67b37465516066cf4dd66bc3507b/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-utils:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/a27f67b37465516066cf4dd66bc3507b/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/185e4061814064a2558ffcc7d96b0360/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/185e4061814064a2558ffcc7d96b0360/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-compat:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/b45d7ff1beb9fa0297a668b48c99ce55/AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-compat:27.0.2] /Users/usuario/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/b45d7ff1beb9fa0297a668b48c99ce55/AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:runtime:1.0.3] /Users/usuario/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/440be05a26aa5d3ed8c47e165eabbd9c/AndroidManifest.xml:20:5-22:41
-MERGED from [android.arch.lifecycle:runtime:1.0.3] /Users/usuario/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/440be05a26aa5d3ed8c47e165eabbd9c/AndroidManifest.xml:20:5-22:41
+MERGED from [com.android.support:support-media-compat:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.0.2.aar/585e2346e8ce54d567e83411dfc51321/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.0.2.aar/585e2346e8ce54d567e83411dfc51321/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/eb28819404b200d71759e09028178d48/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-fragment-27.0.2.aar/eb28819404b200d71759e09028178d48/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/beb7069e04f75d7609de074f64ac6ebd/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.0.2.aar/beb7069e04f75d7609de074f64ac6ebd/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/2b67d3eef91a9df01092d05107d876b4/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/2b67d3eef91a9df01092d05107d876b4/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/8fe42b2ea5e167e165a35242e239bb75/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/8fe42b2ea5e167e165a35242e239bb75/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.0.3] /private/var/root/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/ca46558e9500ee3cfd171f4aed11a711/AndroidManifest.xml:20:5-22:41
+MERGED from [android.arch.lifecycle:runtime:1.0.3] /private/var/root/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/ca46558e9500ee3cfd171f4aed11a711/AndroidManifest.xml:20:5-22:41
 	android:targetSdkVersion
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:15:42-71
 	android:minSdkVersion

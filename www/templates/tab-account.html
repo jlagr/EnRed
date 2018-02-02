@@ -1,6 +1,6 @@
 <ion-view view-title="Mi Cuenta">
   <ion-content>
-    <div class="list list-inset">
+    <div class="list list-inset" style="margin: 20px 10px 30px 10px !important">
         <label class="item item-input item-floating-label">
             <span class="input-label">Nombre Completo</span>
             <input type="text" placeholder="Nombre Completo" ng-model="data.nombre">
@@ -27,7 +27,9 @@
                 </select>
         </label>
     </div>
-
+    <div id="valBlock">
+        <il id="valMessage"></il>
+    </div>
     <div class="button-bar button-clear">
         <a class="button button-calm button-poitive" ng-click="updateAccount()">Actualizar</a>
         &nbsp;

@@ -6,7 +6,7 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 var db = null;
-var testMode = true;
+var testMode = false;
 
 angular.module('EnRed', ['ionic','ngCordova', 'EnRed.controllers', 'EnRed.services'])
 

@@ -51,7 +51,15 @@ angular.module('EnRed.services', [])
       // Set the token as header for all requests
       $http.defaults.headers.common['X-Auth-Token'] = token;
     }
-  
+    
+    function updateUserData(nombre, email, movil, proveedorMovil){
+        //Cuando el usuario actualiza sus datos, se refrescan en los valores globales
+        useremail = email;
+        username = nombre;
+        usermovil = movil;
+        userproveedorMovil = proveedorMovil;
+    }
+
     function destroyUserCredentials() {
       authToken = undefined;
       username = '';
@@ -63,19 +71,7 @@ angular.module('EnRed.services', [])
       $http.defaults.headers.common['X-Auth-Token'] = undefined;
       window.localStorage.removeItem(LOCAL_TOKEN_KEY);
     }
-  
-    var register = function(user) {
-        return $q(function(resolve, reject) {
-          $http.post(API_ENDPOINT.url + '/signup', user).then(function(result) {
-            if (result.data.success) {
-              resolve(result.data.msg);
-            } else {
-              reject(result.data.msg);
-            }
-          });
-        });
-      };
-  
+    
     var login = function(email, pw) {
       return $q(function(resolve, reject) {
         //Crea el JSON con el formulario
@@ -116,8 +112,10 @@ angular.module('EnRed.services', [])
       login: login,
       logout: logout,
       isAuthorized: isAuthorized,
+      updateUserData: updateUserData,
       isAuthenticated: function() {return isAuthenticated;},
       username: function() {return username;},
+      useremail: function() {return useremail;},
       role: function() {return role;},
       userempresa: function() {return userempresa;},
       usermovil: function() {return usermovil;},
@@ -354,7 +352,43 @@ angular.module('EnRed.services', [])
         changePassword: changePassword
       };
 }) //End AdminService
+.service('UserService', function ($q, $http, API_ENDPOINT){
+    var updateAccount = function(nombre, email, movil, proveedorMovil){
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'users', 'command':'updateAccount','nombre':nombre,
+             'email' : email, 'movil':movil, 'proveedorMovil':proveedorMovil};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    //console.log(response);
+                    if (!response.data.success) {
+                        reject(response.data.msg);
+                    }
+                    else {
+                        resolve(true);
+                    }
+            },
+            function (err) {
+                if(err.data.msg != undefined){
+                    reject(err.data.msg);
+                    return false;
+                }
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data.msg);
+                }
+            });
+        });
+    } //End updateAccount
 
+    return {
+        updateAccount: updateAccount
+      };
+}) //End UserService
 .service('MsgService', function () {
     return {
         all: function ($http) {

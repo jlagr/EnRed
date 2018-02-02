@@ -80,12 +80,12 @@ module.exports.metadata =
   "cordova-plugin-device": "1.1.4",
   "cordova-plugin-splashscreen": "4.0.3",
   "cordova-plugin-ionic": "2.0.4",
+  "cordova-plugin-ionic-webview": "1.1.16",
   "cordova-plugin-statusbar": "2.2.1",
   "cordova-plugin-whitelist": "1.3.1",
   "cordova-plugin-x-toast": "2.6.0",
   "cordova-sqlite-storage": "2.2.0",
   "ionic-plugin-keyboard": "2.2.1",
-  "cordova-plugin-ionic-webview": "1.1.16",
   "phonegap-plugin-barcodescanner": "7.0.2"
 };
 // BOTTOM OF METADATA

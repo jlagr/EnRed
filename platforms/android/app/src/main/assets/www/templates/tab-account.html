@@ -1,28 +1,35 @@
 <ion-view view-title="Mi Cuenta">
   <ion-content>
-    <div class="list list-inset">
+    <div class="list list-inset" style="margin: 20px 10px 30px 10px !important">
         <label class="item item-input item-floating-label">
             <span class="input-label">Nombre Completo</span>
             <input type="text" placeholder="Nombre Completo" ng-model="data.nombre">
         </label>
         <label class="item item-input item-floating-label">
             <span class="input-label">Empresa</span>
-            <input type="text" placeholder="Empresa" ng-model="data.empresa">
+            <input type="text" placeholder="Empresa" ng-model="data.empresa" readonly>
         </label>
         <label class="item item-input item-floating-label">
             <span class="input-label">Email</span>
-            <input type="text" placeholder="Email" ng-model="data.email">
+            <input type="text" placeholder="Email" ng-model="data.email" readonly>
         </label>
         <label class="item item-input item-floating-label">
             <span class="input-label">Tel. Movil</span>
             <input type="text" placeholder="Tel. Movil" ng-model="data.movil">
         </label>
-        <label class="item item-input item-floating-label">
-            <span class="input-label">Password</span>
-            <input type="password" placeholder="Password" ng-model="data.password">
+        <label class="item item-input item-select selectMovilProvider">
+            <label for="proveedor">Proveedor:</label>
+                <select ng-init="data.proveedorMovil = 'Telcel'" id="proveedor" ng-model="data.proveedorMovil" >
+                    <option>Telcel</option>
+                    <option>AT&T</option>
+                    <option>Movistar</option>
+                    <option>Otro</option>
+                </select>
         </label>
     </div>
-
+    <div id="valBlock">
+        <il id="valMessage"></il>
+    </div>
     <div class="button-bar button-clear">
         <a class="button button-calm button-poitive" ng-click="updateAccount()">Actualizar</a>
         &nbsp;

@@ -4,7 +4,7 @@
             "outputFile": "/Users/usuario/Documents/ionic/EnRed/platforms/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-si/values-si.xml",
             "map": [
                 {
-                    "source": "/Users/usuario/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/b45d7ff1beb9fa0297a668b48c99ce55/res/values-si/values-si.xml",
+                    "source": "/private/var/root/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/8fe42b2ea5e167e165a35242e239bb75/res/values-si/values-si.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
