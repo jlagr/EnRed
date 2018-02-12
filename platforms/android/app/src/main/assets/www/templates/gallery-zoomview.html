@@ -1,0 +1,22 @@
+<div class="modal image-modal" on-swipe-down="closeModal()" on-swipe-left="deleteImage(image)">
+   
+    <ion-scroll direction="xy" scrollbar-x="true" scrollbar-y="true"
+         zooming="true" min-zoom="{{zoomMin}}" overflow-scroll="false" style="height:90%">
+    
+     <div class="image" style="background-image: url({{urlForImage(image)}})"></div>
+ 
+     </ion-scroll>
+    
+     <ion-footer no-border>
+
+      <ion-toolbar>
+        <div class="imageOptions">
+        <a class="button button-icon icon ion-ios-arrow-back" ng-click="closeModal()"> Galeria </a>
+        &nbsp;&nbsp;&nbsp;
+        <a class="button button-icon icon ion-ios-trash-outline" ng-click="deleteImage(image)"> Borrar</a>
+        </div>
+      </ion-toolbar>
+    
+    </ion-footer>
+
+</div>

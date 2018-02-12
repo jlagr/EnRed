@@ -3,7 +3,7 @@
         
         <label class="item item-input item-floating-label">
             <span class="input-label">Titulo</span>
-            <input type="text" placeholder="Titulo" ng-model="data.titulo">
+            <input type="text" placeholder="Titulo" ng-model="data.titulo" ng-blur="preserveTicket()">
         </label>
         
         <div class="button-bar">
@@ -13,36 +13,47 @@
             &nbsp;
             <a class="button button-icon icon ion-ios-location-outline" ng-click="showMap()"></a>
         </div>
+        <!-- Descripcion -->
         <div ng-hide="Textarea">
             <label class="item item-input item-floating-label">
                 <span class="input-label">Descripción</span>
-                <textarea placeholder="Descripción" ng-model="data.description"></textarea>
+                <textarea placeholder="Descripción" ng-model="data.description" ng-blur="preserveTicket()"></textarea>
             </label>
         </div>
-        <div ng-hide="Gallery">
-            <button class="button button-small icon-left ion-plus-round button-stable" ng-click="openPopover(e)"> Agregar imagen</button>
+        <!-- Galeria -->
+        <div ng-hide="Gallery" ng-controller="GalleryCtrl">
+            <div class="item item-icon-right item-divider">
+                <i class="ion-images"></i>
+                Galeria
+                <i class="icon ion-navicon-round" ng-click="addMedia()"></i>
+              </div>
+              
+              <a class="item item-list-detail image-box">
+                <ion-scroll direction="x">
+                  <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" ng-click="showImages(image)" class="image-list-thumb" />
+                </ion-scroll>
+            </a>
             
         </div>
+        <!-- Mapa -->
         <div ng-hide="Map">
-            <label>Mapa</label>
+            <div class="item item-icon-right item-divider">
+                <i class="ion-map"></i>
+                Ubicación
+              </div>
+              
+              <a class="item item-list-detail image-box">
+                
+            </a>
         </div>
         
     </ion-content>
-    <div class="bar bar-footer" style="margin-bottom:10px; height:70px;">
-        <button class="button button-block icon-center ion-paper-airplane button-calm" ng-click="submitTicket()" style="font-size:17px;">    Enviar</button>
+    <div class="bar bar-footer" style="margin-bottom:10px; height:50px;">
+        <div class="button-bar button-clear">
+            <a class="button button-stable" ng-click="cancelTicket()" style="font-size:17px;">Cancelar</a>
+            &nbsp;
+            <a class="button button-calm" ng-click="submitTicket()" style="font-size:17px;">Enviar</a>
+        </div>
+
     </div>
-    
-    <script type="text/ng-template" id="templates/popover.html">
-        <ion-popover-view>
-            <ion-header-bar>
-                <h1 class="title">Agregar imagenes</h1>
-            </ion-header-bar>
-            <ion-content>
-                <ion-list>
-                    <ion-item> Desde la galeria </ion-item>
-                    <ion-item> Desde la cámara </ion-item>
-                </ion-list>
-            </ion-content>
-        </ion-popover-view>
-    </script>
 </ion-view>

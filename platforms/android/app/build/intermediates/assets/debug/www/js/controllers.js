@@ -63,7 +63,7 @@ angular.module('EnRed.controllers', ['ngCordova'])
     var useremail = window.localStorage.getItem('EnRedUserEmail');
     if(useremail != undefined || useremail != ''){
         $scope.data.email = useremail;
-        if(testMode){
+        if($scope.data.email == 'jlagr@outlook.com'){
             $scope.data.password = 'Ocampo1318';
         }
     }
@@ -368,12 +368,20 @@ angular.module('EnRed.controllers', ['ngCordova'])
         $scope.ticket = Tickets.get($stateParams.ticketId);
     })
 
-.controller('NewCtrl', function ($scope, $http, $ionicPopover, User, $ionicPopup, $state) {
+.controller('NewCtrl', function ($scope, Tickets, $ionicPlatform, $cordovaToast, $ionicPopover, $ionicLoading,
+        $timeout, $ionicPopup, FileService, $state) {
         $scope.data = {};
+
+        $ionicPlatform.ready(function() {
+            $scope.Textarea = false;
+            $scope.Gallery = true;
+            $scope.Map = true;
+            $scope.data = FileService.getStoredTicket();
+        });
 
         $scope.$on('$ionicView.enter', function(scope, states) {
             if(states.fromCache && states.stateName == 'tab.new'){
-                showTextarea();
+                $scope.showTextarea();
             }
         });
 
@@ -395,51 +403,41 @@ angular.module('EnRed.controllers', ['ngCordova'])
             $scope.Map = false;
         }
 
-        $ionicPopover.fromTemplateUrl('templates/popover.html',{
-            animation : 'slide-in-up',
-            scope : $scope
-        }).then(function(p){
-            $scope.popover = p;
-        })
-
-        $scope.openPopover = function(e){
-            $scope.popover.show(e)
-        }
+        $scope.preserveTicket = function() {
+            FileService.storeTicket($scope.data.titulo,$scope.data.description,'-1','-1');
+        }//preserveTicket
 
         $scope.submitTicket = function () {
-            var link = 'http://enreddgo.com.mx/api/newTicket.php';
+            $scope.images = FileService.images();
             if (!IsValid()) { return false };
-            var formData = {
-                email: User.data.mail,
-                titulo: $scope.data.titulo,
-                descripcion: $scope.data.description
-            };
-            $http.post(link, formData).then(function (res) {
-                $scope.response = res.data;
-
-                if ($scope.response[0] == "OK") {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'EnRed Durango',
-                        template: 'Se generó el Ticket No: ' + $scope.response[1]
-                    });
-                    $scope.data.titulo = "";
-                    $scope.data.description = "";
-                    $state.go('tab.dash');
-                }
-                else {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'Error',
-                        template: $scope.response[1]
-                    });
-                }
-            },
-                function (dataErr) {
-                    // Post Error
-                    console.log('post error', dataErr);
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'Error de comunicación',
-                        template: 'No fue posible contactar con el servidor'
-                    })
+            //Muestra el spinner
+            $ionicLoading.show({
+                template: '<ion-spinner icon="ripple" class="spinner-calm"></ion-spinner>'
+            });
+            
+            Tickets.submitTicket($scope.data.titulo,$scope.data.description,
+                $scope.images,'-1','-1').then(function(response){
+                        $timeout(function () {
+                            $ionicLoading.hide();
+                            FileService.removeAllImages();
+                            $ionicPlatform.ready(function() {
+                                $scope.data.titulo = '';
+                                $scope.data.description = '';
+                                ticket = '';
+                                $scope.displayMessage('EnRed',"Se creó el ticket " + response);
+                            });
+                            $state.go('tab.dash', {}, {reload: true});
+                       }, 2000);
+                },
+                function(err){
+                    $ionicLoading.hide();
+                    if(err == "Expired token "){
+                        $scope.displayMessage('EnRed',"Su sesion ha caducado." + response);
+                        $state.go('login', {}, {reload: true});
+                    }
+                    else{
+                        $scope.displayMessage('EnRed',err);
+                    }
                 });
 
             function IsValid() {
@@ -458,9 +456,36 @@ angular.module('EnRed.controllers', ['ngCordova'])
                     return false;
                 }
                 return true;
-            }
-        }
+            } //isValid
+        }//submitTicket
 
+        $scope.cancelTicket = function() {
+            var myPopup = $ionicPopup.show({
+                title: 'Cancelar ticket',
+                subTitle: '¿Desea limpiar toda la información de este ticket?',
+                scope: $scope,
+             
+                buttons: [
+                   { text: 'No' }, {
+                      text: '<b>Si</b>',
+                      type: 'button-positive',
+                      onTap: function() {
+                        return true;
+                      }
+                   }
+                ]
+              });
+          
+              myPopup.then(function(image) {
+                FileService.removeAllImages();
+                $ionicPlatform.ready(function() {
+                  $scope.images = FileService.images();
+                  $scope.data.titulo = '';
+                  $scope.description = '';
+                  ticket = '';
+                });
+              });    
+        } //cancelTicket
     })
 
 .controller('NotificationsCtrl_test', function ($scope, $http, MsgService, Mensajes, testFac) {

@@ -7,6 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 var db = null;
 var testMode = false;
+var ticket = '';
 
 angular.module('EnRed', ['ionic','ngCordova', 'EnRed.controllers', 'EnRed.services'])
 

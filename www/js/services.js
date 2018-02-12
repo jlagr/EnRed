@@ -438,7 +438,7 @@ angular.module('EnRed.services', [])
     }
 })
 
-.factory('Tickets', function() {
+.factory('Tickets', function($q, $http, AuthService, API_ENDPOINT ) {
     // Some fake testing data
     var tickets = [{
         id: 1,
@@ -487,6 +487,41 @@ angular.module('EnRed.services', [])
         comentarios: 'Aquí van los comentarios de quien atendió el ticket'
     }];
 
+    addTicket = function(titulo,descripcion,images,lat,lon) {
+        var email = AuthService.useremail();
+        var nombre = AuthService.username();
+
+        return $q(function(resolve, reject) {
+            //Crea el JSON con el formulario
+            var formData = {'p' : 'tickets', 'command':'add',
+             'email' : email, 'titulo':titulo, 'nombre':nombre,'descripcion':descripcion, 'imagenes':images,
+             'lat':lat, 'long':lon};
+            $http.post(API_ENDPOINT.url,formData).then(
+                function (response) {
+                    console.log("response: " + response.data);
+                    if (!response.data.success) {
+                        reject(response.data.msg);
+                    }
+                    else {
+                        resolve(response.data.msg);
+                    }
+            },
+            function (err) {
+                if(err.data != undefined){
+                    reject(err.data);
+                    return false;
+                }
+                if(err.status == 401){ //Sesion expiró
+                    AuthService.logout();
+                    $state.go('login');
+                    reject("Su sesión ha caducado.");
+                }
+                else{
+                    reject(err.data.msg);
+                }
+            });
+        });
+    } //addTicket
     return {
         all: function() {
             return tickets;
@@ -498,7 +533,8 @@ angular.module('EnRed.services', [])
                 }
             }
             return null;
-        }
+        },
+        submitTicket: addTicket
     };
 })
 
@@ -645,4 +681,175 @@ angular.module('EnRed.services', [])
       return null;
     }
   };
-});
+})
+
+.factory('FileService', function(API_ENDPOINT, $http) {
+    var images;
+    var ticketData;
+    var IMAGE_STORAGE_KEY = 'images';
+    var TICKET_STORAGE_KEY = 'ticket';
+
+    function getLocalTicket(){
+        var storedTicket = window.localStorage.getItem(TICKET_STORAGE_KEY);
+        if (storedTicket) {
+            ticketData = JSON.parse(storedTicket)
+        }
+        else {
+            ticketData = [];
+        }
+        return ticketData;
+    }
+
+    function saveLocalTicket(titulo,desc,lat,long){
+        var storedTicket = { 'tit':titulo,
+            'desc':desc,
+            'lat':lat,
+            'lon': long 
+        };
+        window.localStorage.setItem(TICKET_STORAGE_KEY, JSON.stringify(storedTicket));
+    }
+
+    function getImages() {
+      var img = window.localStorage.getItem(IMAGE_STORAGE_KEY);
+      if (img) {
+        images = JSON.parse(img);
+      } else {
+        images = [];
+      }
+      return images;
+    };
+   
+    function addImage(img) {
+      images.push(img);
+      window.localStorage.setItem(IMAGE_STORAGE_KEY, JSON.stringify(images));
+    };
+   
+  
+    function removeImage(img) {
+      //Borra la imagen en el servidor
+      //TODO incluir en el comando el no. de ticket si existe
+      var data = {'command':'removeImage', 'image':img};
+      $http.post(API_ENDPOINT.cleaner,data).then(
+        function (result) {
+            console.log(JSON.stringify(result.data));
+            //Si se eliminó del servidor la elimina del dispositivo
+            for(i=0;i<images.length;i++){
+              if(images[i] == img){
+                images.splice(i, 1);
+                console.log("Se borro del dispositivo");
+                break;
+              }
+            };
+            window.localStorage.removeItem(IMAGE_STORAGE_KEY);
+            window.localStorage.setItem(IMAGE_STORAGE_KEY, JSON.stringify(images));
+        },
+        function (err) {
+          console.log(JSON.stringify(err));
+        });
+    };
+  
+    function cleanImages(){
+        for(i=0; i<images.length; i++){
+            var data = {'command':'removeImage', 'image':images[i]};
+            $http.post(API_ENDPOINT.cleaner,data).then(
+                function (result) {
+                    console.log(JSON.stringify(result.data));
+                },
+                function (err) {
+                console.log(JSON.stringify(err));
+                });
+        }
+        images.length = 0;
+        window.localStorage.removeItem(IMAGE_STORAGE_KEY);
+        window.localStorage.setItem(IMAGE_STORAGE_KEY, JSON.stringify(images));
+        //Tambien elimina la info local del ticket
+        ticketData.lenght = 0;
+        window.localStorage.setItem(TICKET_STORAGE_KEY, JSON.stringify(ticketData));
+    } //removeAllImages
+
+    return {
+      storeImage: addImage,
+      images: getImages,
+      removeImage: removeImage,
+      removeAllImages: cleanImages,
+      getStoredTicket: getLocalTicket,
+      storeTicket: saveLocalTicket
+    }
+  })
+
+  .factory('ImageService', function($cordovaCamera, FileService, $q, $cordovaFile, $cordovaFileTransfer, API_ENDPOINT, $timeout) {
+    function makeid() {
+        var text = '';
+        var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+     
+        for (var i = 0; i < 5; i++) {
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
+      };
+     
+      function optionsForType(type) {
+        var source;
+        switch (type) {
+          case 0:
+            source = Camera.PictureSourceType.CAMERA;
+            break;
+          case 1:
+            source = Camera.PictureSourceType.PHOTOLIBRARY;
+            break;
+        }
+        return {
+          destinationType: Camera.DestinationType.FILE_URI,
+          sourceType: source,
+          allowEdit: false,
+          targetWidth: 500,
+          encodingType: Camera.EncodingType.JPEG,
+          popoverOptions: CameraPopoverOptions,
+          saveToPhotoAlbum: false,
+          correctOrientation: true
+        };
+      }
+     
+      function saveMedia(type) {
+        return $q(function(resolve, reject) {
+          var options = optionsForType(type);
+     
+          $cordovaCamera.getPicture(options).then(function(imageUrl) {
+              if(ionic.Platform.isAndroid() && type === 1){
+                  window.resolveLocalFileSystemURL(imageUrl, function(fileEntry){
+                     imageUrl = fileEntry.nativeURL;
+                  });
+                }
+            var name = imageUrl.substr(imageUrl.lastIndexOf('/') + 1);
+            var namePath = imageUrl.substr(0, imageUrl.lastIndexOf('/') + 1);
+            var newName = makeid() + name;
+            if(name.indexOf('?') != -1) {
+              name = name.substr(0, name.lastIndexOf('?'));
+              newName = makeid() + name;
+              }
+            //Sube la imagen a la carpeta temporan en el servidor
+            //Define las opciones a pasar al servidor
+            var options = {
+              fileKey: "file",
+              fileName: name,
+              chunkedMode: false,
+              mimeType: "multipart/form-data",
+              params : {'command':'saveTemp'}
+            };
+            $cordovaFileTransfer.upload(API_ENDPOINT.uploader, imageUrl, options)
+             .then(function(result) {
+              //Guarda el nombre de la imagen en el array
+              FileService.storeImage(name);
+              //console.log("SUCCESS: " + JSON.stringify(result.response));
+             }, function(err) {
+               console.log("Error: " + JSON.stringify(err));
+             }, function (progress) {
+               // constant progress updates
+             });
+          });
+        })
+      }
+      return {
+        handleMediaDialog: saveMedia
+      }
+    })

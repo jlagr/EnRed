@@ -1,9 +1,20 @@
 -- Merging decision tree log ---
+provider#android.support.v4.content.FileProvider
+INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:14:9-16:20
+	android:grantUriPermissions
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:14:92-126
+	android:authorities
+		INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:14:19-66
+	android:exported
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:14:67-91
+	android:name
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:14:127-181
 manifest
-ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
-INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
-INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
-INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
+ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-23:12
 MERGED from [com.android.support:support-v4:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/14d201fd2deddb7ae3ea83cb817c2f8d/AndroidManifest.xml:17:1-22:12
 MERGED from [:barcodescanner-release-2.1.5:] /private/var/root/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:2:1-14:12
 MERGED from [:CordovaLib] /Users/usuario/Documents/ionic/EnRed/platforms/android/CordovaLib/build/intermediates/manifests/full/debug/AndroidManifest.xml:20:1-27:12
@@ -13,9 +24,9 @@ MERGED from [com.android.support:support-core-utils:27.0.2] /private/var/root/.g
 MERGED from [com.android.support:support-core-ui:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.0.2.aar/2b67d3eef91a9df01092d05107d876b4/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-compat:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-compat-27.0.2.aar/8fe42b2ea5e167e165a35242e239bb75/AndroidManifest.xml:17:1-22:12
 MERGED from [android.arch.lifecycle:runtime:1.0.3] /private/var/root/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/ca46558e9500ee3cfd171f4aed11a711/AndroidManifest.xml:17:1-24:12
-INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
-INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
-INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-19:12
+INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-23:12
+INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:1-23:12
 	package
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:2:102-127
 		INJECTED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml
@@ -51,7 +62,7 @@ ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/A
 	android:name
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:4:22-64
 application
-ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:5:5-14:19
+ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:5:5-17:19
 MERGED from [:barcodescanner-release-2.1.5:] /private/var/root/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:11:5-12:19
 MERGED from [:barcodescanner-release-2.1.5:] /private/var/root/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:11:5-12:19
 	android:supportsRtl
@@ -109,7 +120,7 @@ ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/A
 	android:name
 		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:13:41-109
 uses-sdk
-ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:15:5-74
+ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:18:5-74
 MERGED from [com.android.support:support-v4:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/14d201fd2deddb7ae3ea83cb817c2f8d/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-v4:27.0.2] /private/var/root/.gradle/caches/transforms-1/files-1.1/support-v4-27.0.2.aar/14d201fd2deddb7ae3ea83cb817c2f8d/AndroidManifest.xml:20:5-44
 MERGED from [:barcodescanner-release-2.1.5:] /private/var/root/.gradle/caches/transforms-1/files-1.1/barcodescanner-release-2.1.5.aar/0d4d5beb0aeba7872f28d209fd36c894/AndroidManifest.xml:7:5-9:41
@@ -129,20 +140,30 @@ MERGED from [com.android.support:support-compat:27.0.2] /private/var/root/.gradl
 MERGED from [android.arch.lifecycle:runtime:1.0.3] /private/var/root/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/ca46558e9500ee3cfd171f4aed11a711/AndroidManifest.xml:20:5-22:41
 MERGED from [android.arch.lifecycle:runtime:1.0.3] /private/var/root/.gradle/caches/transforms-1/files-1.1/runtime-1.0.3.aar/ca46558e9500ee3cfd171f4aed11a711/AndroidManifest.xml:20:5-22:41
 	android:targetSdkVersion
-		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:15:42-71
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:18:42-71
 	android:minSdkVersion
-		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:15:15-41
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:18:15-41
 uses-permission#android.permission.CAMERA
-ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:16:5-65
+ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:19:5-65
 	android:name
-		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:16:22-62
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:19:22-62
 uses-permission#android.permission.FLASHLIGHT
-ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:17:5-69
+ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:20:5-69
 	android:name
-		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:17:22-66
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:20:22-66
 uses-feature#android.hardware.camera
-ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:18:5-84
+ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:21:5-84
 	android:required
-		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:18:58-81
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:21:58-81
 	android:name
-		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:18:19-57
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:21:19-57
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:22:5-81
+	android:name
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:22:22-78
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:15:13-116
+	android:resource
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:15:75-113
+	android:name
+		ADDED from /Users/usuario/Documents/ionic/EnRed/platforms/android/app/src/main/AndroidManifest.xml:15:24-74
